@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    style="@style/Login"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.flaviofaria.kenburnsview.KenBurnsView
+        android:id="@+id/backgroud"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_login">
+    </com.flaviofaria.kenburnsview.KenBurnsView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#c87b1fa2"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/logo"
+            android:layout_gravity="center"
+            android:background="@drawable/logo"
+            android:layout_marginTop="64dp"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="58dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:focusableInTouchMode="true"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            style="@style/Login">
+
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:layout_gravity="center"
+                android:gravity="bottom">
+
+                <com.mikepenz.iconics.view.IconicsImageView
+                    app:iiv_color="@color/primary_light"
+                    app:iiv_icon="gmd-person"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".5"
+                    android:layout_margin="3dp"
+                    android:layout_gravity="center"/>
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:inputType="textEmailAddress"
+                    android:ems="10"
+                    android:id="@+id/editText_email"
+                    android:hint="@string/CorreoElectronico"
+                    android:textSize="15sp"
+                    android:focusableInTouchMode="true"
+                    android:singleLine="true"
+                    android:textColor="@color/accent"
+                    android:textColorHint="@color/primary_light"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginStart="3dp"
+                    />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:layout_gravity="center"
+                android:gravity="bottom">
+
+                <com.mikepenz.iconics.view.IconicsImageView
+                    app:iiv_color="@color/primary_light"
+                    app:iiv_icon="gmd-https"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".5"
+                    android:layout_margin="3dp"
+                    android:layout_gravity="center"
+                    android:padding="3dp"/>
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:inputType="textPassword"
+                    android:ems="10"
+                    android:id="@+id/editText_password"
+                    android:hint="@string/Contrasena"
+                    android:textSize="15sp"
+                    android:focusableInTouchMode="true"
+                    android:singleLine="true"
+                    android:textColor="@color/accent"
+                    android:textColorHint="@color/primary_light"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginStart="3dp"
+                    android:fontFamily="sans-serif"/>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/EntrarLogin"
+                    android:id="@+id/button_entrar"
+                    android:singleLine="false"
+                    android:textColor="@color/icons"/>
+            </TableRow>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
