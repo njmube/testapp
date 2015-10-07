@@ -5,4 +5,7 @@
     <string name="EntrarLogin">Entrar</string>
 
     <string name="facebook_app_id">467429040104023</string>
+    <string name="cuenta_nueva_login">Crear nueva cuenta</string>
+    <string name="olvide_password_login">¿Olvidaste la contraseña?</string>
+    <string name="tambien_login">o también</string>
 </resources>
