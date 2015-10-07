@@ -3,4 +3,6 @@
     <string name="CorreoElectronico">Correo Electrónico</string>
     <string name="Contrasena">Contraseña</string>
     <string name="EntrarLogin">Entrar</string>
+
+    <string name="facebook_app_id">467429040104023</string>
 </resources>
