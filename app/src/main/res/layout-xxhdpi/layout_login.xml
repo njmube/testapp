@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    style="@style/Login"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:facebook="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.flaviofaria.kenburnsview.KenBurnsView
+        android:id="@+id/backgroud"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_login">
+    </com.flaviofaria.kenburnsview.KenBurnsView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/bg_tranparent">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/logo"
+            android:contentDescription="@string/app_name"/>
+
+        <LinearLayout
+            style="@style/Login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp">
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/CorreoElectronico"
+                android:layout_gravity="center"
+                android:id="@+id/editText_email"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:textSize="14sp"
+
+                app:met_baseColor="@color/primary_light"
+                app:met_primaryColor="@color/accent"
+                app:met_textColor="@color/accent"
+                app:met_textColorHint="@color/primary_light"
+                app:met_helperTextColor="@color/primary_light"
+                app:met_underlineColor="@color/primary_light"
+
+                app:met_iconLeft="@drawable/ic_person_black_24dp"
+                app:met_iconPadding="0dp"/>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/Contrasena"
+                android:layout_gravity="center"
+                android:id="@+id/editText_password"
+                android:inputType="textPassword"
+                android:fontFamily="sans-serif"
+                android:singleLine="true"
+                android:textSize="14sp"
+
+                app:met_baseColor="@color/primary_light"
+                app:met_primaryColor="@color/accent"
+                app:met_textColor="@color/accent"
+                app:met_textColorHint="@color/primary_light"
+                app:met_helperTextColor="@color/primary_light"
+                app:met_underlineColor="@color/primary_light"
+
+                app:met_iconLeft="@drawable/ic_lock_black_24dp"
+                app:met_iconPadding="0dp"/>
+
+                <Button
+                    android:id="@+id/button_entrar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="false"
+                    android:text="@string/EntrarLogin"
+                    android:textColor="@color/icons"
+                    android:elevation="5dp"
+                    android:layout_marginTop="10dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:focusable="false"
+            android:gravity="top|center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="@string/tambien_login"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/icons"
+                android:textSize="14dp"/>
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                facebook:login_text="LOGIN"/>
+
+            <TextView
+                android:id="@+id/textView_nueva_cuenta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="@string/cuenta_nueva_login"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/primary_light"
+                android:textIsSelectable="false"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/textView_olvida_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/olvide_password_login"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/primary_light"
+                android:textIsSelectable="false"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

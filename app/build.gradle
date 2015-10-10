@@ -24,7 +24,10 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.0.1'
+    // Kenburnsview
     compile 'com.flaviofaria:kenburnsview:1.0.6'
+    // Material Edit Inputs
+    compile 'com.rengwuxian.materialedittext:library:2.1.4'
     // Iconos
     compile 'com.mikepenz:iconics-core:1.7.6@aar'
     compile 'com.mikepenz:google-material-typeface:1.2.0.1@aar'

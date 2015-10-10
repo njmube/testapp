@@ -1,7 +1,5 @@
-package com.app.luis.androidapp;
+package com.app.luis.androidapp.activities;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.app.luis.androidapp.R;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
 
-        setContentView(R.layout.login_activity);
+        setContentView(R.layout.layout_login);
 
         email = (EditText) findViewById(R.id.editText_email);
         password = (EditText) findViewById(R.id.editText_password);
