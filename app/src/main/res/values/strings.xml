@@ -8,4 +8,6 @@
     <string name="cuenta_nueva_login">Crear nueva cuenta</string>
     <string name="olvide_password_login">¿Olvidaste la contraseña?</string>
     <string name="tambien_login">o también</string>
+    <string name="hint_nombre">Nombre</string>
+    <string name="hint_apellido">Apellido</string>
 </resources>
