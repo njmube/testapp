@@ -13,7 +13,7 @@
 
         <!-- Login -->
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".activities.Login"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Login" >

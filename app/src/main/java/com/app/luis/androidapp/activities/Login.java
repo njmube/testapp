@@ -20,7 +20,7 @@ import com.facebook.login.widget.LoginButton;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.Transition;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class Login extends AppCompatActivity implements View.OnClickListener {
 
     private EditText email, password;
     private Button entrar;
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Toast.makeText(LoginActivity.this, "User ID: "
+                Toast.makeText(Login.this, "User ID: "
                         + loginResult.getAccessToken().getUserId()
                         + "\n" +
                         "Auth Token: "
@@ -76,12 +76,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onCancel() {
-                Toast.makeText(LoginActivity.this, "Cancelado", Toast.LENGTH_LONG).show();
+                Toast.makeText(Login.this, "Cancelado", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(LoginActivity.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(Login.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -96,7 +96,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Toast.makeText(getApplicationContext(), "Email: " + email + "\nPassword: " + password, Toast.LENGTH_LONG).show();
                 break;
             case R.id.textView_nueva_cuenta:
-                Toast.makeText(getApplicationContext(), "Fragment/activity", Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(this, NuevaCuenta.class);
+                startActivity(intent);
+
                 break;
             case R.id.textView_olvida_password:
                 Toast.makeText(getApplicationContext(), "Fragment/activity oliva password", Toast.LENGTH_LONG).show();
