@@ -15,8 +15,7 @@
         <activity
             android:name=".activities.Login"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:theme="@style/Login" >
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,13 +27,12 @@
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            android:label="@string/app_name">
         </activity>
 
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id" />
 
-        <activity android:name=".activities.NuevaCuenta" android:label="@string/app_name"/> <!-- Nueva Cuenta -->
+        <activity android:name=".activities.NuevaCuenta" android:label="@string/app_name" android:screenOrientation="portrait"/> <!-- Nueva Cuenta -->
     </application>
 
 </manifest>

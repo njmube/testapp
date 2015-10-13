@@ -1,13 +1,15 @@
 <resources>
     <string name="app_name">AndroidApp</string>
-    <string name="CorreoElectronico">Correo Electrónico</string>
-    <string name="Contrasena">Contraseña</string>
-    <string name="EntrarLogin">Entrar</string>
+    <string name="HINT_EMAIL">Correo Electrónico</string>
+    <string name="HINT_PASSWORD">Contraseña</string>
+    <string name="HINT_CONFIRM_PASSWORD">Confirma contraseña</string>
+    <string name="BUTTON_LOGIN_ENTRAR">Entrar</string>
 
     <string name="facebook_app_id">467429040104023</string>
-    <string name="cuenta_nueva_login">Crear nueva cuenta</string>
-    <string name="olvide_password_login">¿Olvidaste la contraseña?</string>
-    <string name="tambien_login">o también</string>
-    <string name="hint_nombre">Nombre</string>
-    <string name="hint_apellido">Apellido</string>
+    <string name="TEXT_NUEVA_CUENTA">Crear nueva cuenta</string>
+    <string name="TEXT_OLVIDE_PASSWORD">¿Olvidaste la contraseña?</string>
+    <string name="TEXT_TAMBIEN">o también</string>
+    <string name="HINT_NOMBRE">Nombre</string>
+    <string name="HINT_APELLIDO">Apellido</string>
+    <string name="BY_CREATING_YOUR_ACCOUNT">Al crear una cuenta estás aceptando los %1$s y %2$s.</string>
 </resources>

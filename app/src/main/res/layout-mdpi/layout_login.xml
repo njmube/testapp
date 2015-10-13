@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    style="@style/Login"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:facebook="http://schemas.android.com/tools"
@@ -31,7 +30,6 @@
             android:scaleType="centerInside"/>
 
         <RelativeLayout
-            style="@style/Login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -65,7 +63,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_toEndOf="@+id/icon_email"
                 android:layout_toRightOf="@+id/icon_email"
-                android:hint="@string/CorreoElectronico"
+                android:hint="@string/HINT_EMAIL"
                 android:inputType="textEmailAddress"
                 android:singleLine="true"
                 android:textSize="14sp"
@@ -103,7 +101,7 @@
                 android:layout_toEndOf="@+id/icon_password"
                 android:layout_toRightOf="@+id/icon_password"
                 android:fontFamily="sans-serif"
-                android:hint="@string/Contrasena"
+                android:hint="@string/HINT_PASSWORD"
                 android:inputType="textPassword"
                 android:singleLine="true"
                 android:textSize="14sp"
@@ -123,7 +121,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
                 android:singleLine="false"
-                android:text="@string/EntrarLogin"
+                android:text="@string/BUTTON_LOGIN_ENTRAR"
                 android:textColor="@color/icons" />
         </RelativeLayout>
 
@@ -143,7 +141,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="@string/tambien_login"
+                android:text="@string/TEXT_TAMBIEN"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/icons"
                 android:textSize="14sp"/>
@@ -162,7 +160,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="@string/cuenta_nueva_login"
+                android:text="@string/TEXT_NUEVA_CUENTA"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/primary_light"
                 android:textIsSelectable="false"
@@ -175,7 +173,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="@string/olvide_password_login"
+                android:text="@string/TEXT_OLVIDE_PASSWORD"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/primary_light"
                 android:textIsSelectable="false"

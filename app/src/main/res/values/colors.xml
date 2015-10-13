@@ -10,4 +10,6 @@
     <color name="divider">#B6B6B6</color>
 
     <color name="bg_tranparent">#c89c27b0</color>
+    <color name="white">#FFFFFF</color>
+
 </resources>
