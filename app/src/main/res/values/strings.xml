@@ -12,4 +12,8 @@
     <string name="HINT_NOMBRE">Nombre</string>
     <string name="HINT_APELLIDO">Apellido</string>
     <string name="BY_CREATING_YOUR_ACCOUNT">Al crear una cuenta estás aceptando los %1$s y %2$s.</string>
+    <string name="ACB_GUARDAR">Guardar</string>
+    <string name="ACB_TITLE_NUEVA_CUENTA">Nueva cuenta</string>
+
+    <string name="CAMPO_NO_PUEDE_SER_VACIO">Este campo no puede estar vacío</string>
 </resources>

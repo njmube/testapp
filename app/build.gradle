@@ -17,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
 }
 
 
@@ -24,6 +27,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.0.1'
+    // ButterKnife
+    compile 'com.jakewharton:butterknife:7.0.1'
     // Kenburnsview
     compile 'com.flaviofaria:kenburnsview:1.0.6'
     // Material Edit Inputs

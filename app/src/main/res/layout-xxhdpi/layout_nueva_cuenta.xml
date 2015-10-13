@@ -23,8 +23,8 @@
             android:id="@+id/layout_form_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbarStyle="outsideOverlay"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:scrollbarStyle="outsideOverlay">
 
             <com.mikepenz.iconics.view.IconicsImageView
                 android:id="@+id/icon_first_name"
@@ -59,7 +59,9 @@
 
                 app:met_baseColor="@color/secondary_text"
                 app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/primary"/>
+                app:met_primaryColor="@color/primary"
+                app:met_typeface="fonts/RobotoCondensed-Regular.ttf"
+                app:met_accentTypeface="fonts/RobotoCondensed-Bold.ttf"/>
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/edit_text_apellido"
@@ -78,7 +80,9 @@
 
                 app:met_baseColor="@color/secondary_text"
                 app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/primary"/>
+                app:met_primaryColor="@color/primary"
+                app:met_typeface="fonts/RobotoCondensed-Regular.ttf"
+                app:met_accentTypeface="fonts/RobotoCondensed-Bold.ttf"/>
 
             <com.mikepenz.iconics.view.IconicsImageView
                 android:id="@+id/icon_email"
@@ -116,7 +120,9 @@
                 android:textSize="16sp"
                 app:met_baseColor="@color/secondary_text"
                 app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/primary"/>
+                app:met_primaryColor="@color/primary"
+                app:met_typeface="fonts/RobotoCondensed-Regular.ttf"
+                app:met_accentTypeface="fonts/RobotoCondensed-Bold.ttf"/>
 
             <com.mikepenz.iconics.view.IconicsImageView
                 android:id="@id/icon_password"
@@ -148,14 +154,15 @@
                 android:layout_toRightOf="@+id/icon_email"
                 android:hint="@string/HINT_PASSWORD"
                 android:imeOptions="actionNext"
+                android:inputType="textPassword"
+
                 android:singleLine="true"
                 android:textSize="16sp"
-
                 app:met_baseColor="@color/secondary_text"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/primary"
-                android:inputType="textPassword"
-                android:fontFamily="sans-serif"/>
+                app:met_typeface="fonts/RobotoCondensed-Regular.ttf"
+                app:met_accentTypeface="fonts/RobotoCondensed-Bold.ttf"/>
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/edit_text_confirm_password"
@@ -170,21 +177,15 @@
                 android:layout_toRightOf="@+id/icon_email"
                 android:hint="@string/HINT_CONFIRM_PASSWORD"
                 android:imeOptions="actionDone"
+                android:inputType="textPassword"
+
                 android:singleLine="true"
                 android:textSize="16sp"
-
                 app:met_baseColor="@color/secondary_text"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/primary"
-                android:inputType="textPassword"
-                android:fontFamily="sans-serif"/>
-
-            <View
-                android:id="@+id/line_below_login_form"
-                android:layout_width="fill_parent"
-                android:layout_height="1.0dip"
-                android:layout_below="@id/edit_text_confirm_password"
-                android:background="@color/divider"/>
+                app:met_typeface="fonts/RobotoCondensed-Regular.ttf"
+                app:met_accentTypeface="fonts/RobotoCondensed-Bold.ttf"/>
 
         </RelativeLayout>
     </ScrollView>

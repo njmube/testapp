@@ -65,14 +65,15 @@
                 android:hint="@string/HINT_EMAIL"
                 android:inputType="textEmailAddress"
                 android:singleLine="true"
-                android:textSize="14sp"
+                android:textSize="16sp"
 
                 app:met_baseColor="@color/primary_light"
                 app:met_helperTextColor="@color/primary_light"
                 app:met_primaryColor="@color/accent"
                 app:met_textColor="@color/accent"
                 app:met_textColorHint="@color/primary_light"
-                app:met_underlineColor="@color/primary_light"/>
+                app:met_underlineColor="@color/primary_light"
+                app:met_typeface="fonts/RobotoCondensed-Regular.ttf"/>
 
             <com.mikepenz.iconics.view.IconicsImageView
                 android:id="@+id/icon_password"
@@ -99,18 +100,18 @@
                 android:layout_marginStart="10dp"
                 android:layout_toEndOf="@+id/icon_password"
                 android:layout_toRightOf="@+id/icon_password"
-                android:fontFamily="sans-serif"
                 android:hint="@string/HINT_PASSWORD"
                 android:inputType="textPassword"
                 android:singleLine="true"
-                android:textSize="14sp"
+                android:textSize="16sp"
 
                 app:met_baseColor="@color/primary_light"
                 app:met_helperTextColor="@color/primary_light"
                 app:met_primaryColor="@color/accent"
                 app:met_textColor="@color/accent"
                 app:met_textColorHint="@color/primary_light"
-                app:met_underlineColor="@color/primary_light"/>
+                app:met_underlineColor="@color/primary_light"
+                app:met_typeface="fonts/RobotoCondensed-Regular.ttf"/>
 
             <Button
                 android:id="@+id/button_entrar"
