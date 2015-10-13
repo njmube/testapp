@@ -22,7 +22,7 @@ import com.flaviofaria.kenburnsview.Transition;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText email, password;
+    EditText email, password;
     private Button entrar;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
@@ -124,5 +124,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         super.onPause();
         // Logs 'app deactivate' App Event.
         AppEventsLogger.deactivateApp(this);
+    }
+
+    public boolean emptyField() {
+        return true;
     }
 }

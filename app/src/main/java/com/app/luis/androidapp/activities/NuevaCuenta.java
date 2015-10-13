@@ -54,9 +54,10 @@ public class NuevaCuenta extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_done_action:
-                Toast.makeText(getApplicationContext(), "Envia los datos", Toast.LENGTH_LONG).show();
+                if(emptyFields()) {
+                    Toast.makeText(getApplicationContext(), "Envia los datos", Toast.LENGTH_LONG).show();
+                }
 
-                emptyFields();
                 break;
 
             case android.R.id.home:
@@ -69,37 +70,48 @@ public class NuevaCuenta extends AppCompatActivity {
     /**
      * Validacion de campos no sean vacíos
      *
-     * @return
+     * @return boolean
      */
     public boolean emptyFields() {
         if (!Utils.checkEditTextNotEmpty(this.editTextNombre)) {
             editTextNombre.setError(Utils.stringFromResource(getApplicationContext(), R.string.CAMPO_NO_PUEDE_SER_VACIO));
-            return true;
+            return false;
         }
 
         if (!Utils.checkEditTextNotEmpty(this.editTextApellido)) {
             editTextApellido.setError(Utils.stringFromResource(getApplicationContext(), R.string.CAMPO_NO_PUEDE_SER_VACIO));
-            return true;
+            return false;
         }
 
         if (Utils.checkEditTextNotEmpty(this.editTextEmail)) {
             if (!DataValidator.isValidEmail(this.editTextEmail.getText().toString())) {
                 editTextEmail.setError("Correo inválido");
-                return true;
+                return false;
             }
         }else {
             editTextEmail.setError(Utils.stringFromResource(getApplicationContext(), R.string.CAMPO_NO_PUEDE_SER_VACIO));
-            return true;
+            return false;
         }
 
-        if (!Utils.checkEditTextNotEmpty(this.editTextPassword)) {
+        if (Utils.checkEditTextNotEmpty(this.editTextPassword)) {
+            if(!(editTextPassword.getText().toString().length() > 5 && editTextPassword.getText().toString().length() < 40)) {
+                editTextPassword.setError("Esribe mínimo 5 y máximo 40 letras");
+                return false;
+            }
+        } else {
             editTextPassword.setError(Utils.stringFromResource(getApplicationContext(), R.string.CAMPO_NO_PUEDE_SER_VACIO));
-            return true;
+            return false;
         }
 
-        if (!Utils.checkEditTextNotEmpty(this.editTextConfirmPassword)) {
+        if (Utils.checkEditTextNotEmpty(this.editTextConfirmPassword)) {
+            if(!editTextPassword.getText().toString().equals(editTextConfirmPassword.getText().toString())) {
+                editTextConfirmPassword.setError("Debes escribir la misma contraseña");
+                return false;
+            }
+
+        }else {
             editTextConfirmPassword.setError(Utils.stringFromResource(getApplicationContext(), R.string.CAMPO_NO_PUEDE_SER_VACIO));
-            return true;
+            return false;
         }
         return true;
     }
