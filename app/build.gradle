@@ -42,4 +42,8 @@ dependencies {
     compile 'com.mikepenz:community-material-typeface:1.2.64.1@aar'
     // Facebook connect
     compile 'com.facebook.android:facebook-android-sdk:+'
+    // MaterialDialog
+    compile('com.afollestad.material-dialogs:core:0.8.3.0@aar') {
+        transitive = true
+    }
 }

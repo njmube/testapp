@@ -2,14 +2,18 @@ package com.app.luis.androidapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.app.luis.androidapp.R;
+import com.app.luis.androidapp.helpers.DataValidator;
+import com.app.luis.androidapp.helpers.Utils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -22,12 +26,11 @@ import com.flaviofaria.kenburnsview.Transition;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
-    EditText email, password;
-    private Button entrar;
-    private LoginButton loginButton;
+    private EditText editTextEmail, editTextPassword, dialogEditTextRecoverEmail;
+    private Button buttonEntrar;
     private CallbackManager callbackManager;
 
-    private TextView nuevaCuenta, olvidaPassword;
+    private TextView textViewNuevaCuenta, textViewOlvidaPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +40,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         setContentView(R.layout.layout_login);
 
-        email = (EditText) findViewById(R.id.editText_email);
-        password = (EditText) findViewById(R.id.editText_password);
-        entrar = (Button) findViewById(R.id.button_entrar);
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        nuevaCuenta = (TextView) findViewById(R.id.textView_nueva_cuenta);
-        olvidaPassword = (TextView) findViewById(R.id.textView_olvida_password);
+        editTextEmail = (EditText) findViewById(R.id.editText_email);
+        dialogEditTextRecoverEmail = (EditText) findViewById(R.id.dialog_edit_text_recover_email);
+        editTextPassword = (EditText) findViewById(R.id.editText_password);
+        buttonEntrar = (Button) findViewById(R.id.button_entrar);
+        textViewNuevaCuenta = (TextView) findViewById(R.id.textView_nueva_cuenta);
+        textViewOlvidaPassword = (TextView) findViewById(R.id.textView_olvida_password);
+        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
 
         // KenBurnsView de fondo
         KenBurnsView kenBurnsView = (KenBurnsView) findViewById(R.id.backgroud);
@@ -59,9 +63,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         });
 
         // Botones
-        entrar.setOnClickListener(this);
-        nuevaCuenta.setOnClickListener(this);
-        olvidaPassword.setOnClickListener(this);
+        buttonEntrar.setOnClickListener(this);
+        textViewNuevaCuenta.setOnClickListener(this);
+        textViewOlvidaPassword.setOnClickListener(this);
 
         // Login con Facebook
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -91,8 +95,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         switch (view.getId()) {
             case R.id.button_entrar:
-                String email = this.email.getText().toString();
-                String password = this.password.getText().toString();
+                String email = this.editTextEmail.getText().toString();
+                String password = this.editTextPassword.getText().toString();
                 Toast.makeText(getApplicationContext(), "Email: " + email + "\nPassword: " + password, Toast.LENGTH_LONG).show();
                 break;
             case R.id.textView_nueva_cuenta:
@@ -102,7 +106,24 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
                 break;
             case R.id.textView_olvida_password:
-                Toast.makeText(getApplicationContext(), "Fragment/activity oliva password", Toast.LENGTH_LONG).show();
+
+                new MaterialDialog.Builder(this)
+                        .title("Restablecer contraseña")
+                        .customView(R.layout.dialog_reset_password, false)
+                        .positiveText("Restablecer")
+                        .negativeText("Cancelar")
+                        .titleColorRes(R.color.primary)
+                        .positiveColorRes(R.color.primary)
+                        .negativeColorRes(R.color.primary)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+
+                            @Override
+                            public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
+
+                            }
+                        })
+                        .show();
+
                 break;
         }
     }
@@ -127,6 +148,15 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     public boolean emptyField() {
+        if (Utils.checkEditTextNotEmpty(dialogEditTextRecoverEmail)) {
+            if (!DataValidator.isValidEmail(dialogEditTextRecoverEmail.getText().toString())) {
+                dialogEditTextRecoverEmail.setError("Correo inválido");
+                return false;
+            }
+        } else {
+            dialogEditTextRecoverEmail.setError(Utils.stringFromResource(Login.this, R.string.CAMPO_NO_PUEDE_SER_VACIO));
+            return false;
+        }
         return true;
     }
 }
