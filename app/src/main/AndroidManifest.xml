@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.app.luis.androidapp" >
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -26,10 +27,19 @@
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
         </activity>
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id" />
-        <activity android:name=".activities.NuevaCuenta" android:label="@string/app_name" android:screenOrientation="portrait"/> <!-- Nueva Cuenta -->
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name=".activities.NuevaCuenta"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" /> <!-- Nueva Cuenta -->
+        <activity android:name=".activities.Home" >
+        </activity>
     </application>
 
 </manifest>

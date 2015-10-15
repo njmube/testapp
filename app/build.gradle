@@ -46,4 +46,8 @@ dependencies {
     compile('com.afollestad.material-dialogs:core:0.8.3.0@aar') {
         transitive = true
     }
+    // Tabs
+    compile 'com.jpardogo.materialtabstrip:library:1.1.0'
+    // Calligraphy
+    compile 'uk.co.chrisjenx:calligraphy:2.1.0'
 }

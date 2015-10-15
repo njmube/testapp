@@ -85,7 +85,7 @@ public class NuevaCuenta extends AppCompatActivity {
 
         if (Utils.checkEditTextNotEmpty(this.editTextEmail)) {
             if (!DataValidator.isValidEmail(this.editTextEmail.getText().toString())) {
-                editTextEmail.setError("Correo inválido");
+                editTextEmail.setError(Utils.stringFromResource(getApplicationContext(), R.string.INPUT_ERROR_CORREO_INVALIDO));
                 return false;
             }
         }else {

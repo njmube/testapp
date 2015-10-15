@@ -6,12 +6,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.flaviofaria.kenburnsview.KenBurnsView
-        android:id="@+id/backgroud"
+    <ViewSwitcher
+        android:id="@+id/viewSwitcher"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/bg_login">
-    </com.flaviofaria.kenburnsview.KenBurnsView>
+        android:inAnimation="@android:anim/fade_in"
+        android:outAnimation="@android:anim/fade_out">
+
+        <com.flaviofaria.kenburnsview.KenBurnsView
+            android:id="@+id/bg_login"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/bg_login" />
+
+        <com.flaviofaria.kenburnsview.KenBurnsView
+            android:id="@+id/bg_login2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/bg_login2" />
+
+    </ViewSwitcher>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -65,14 +79,15 @@
                 android:hint="@string/HINT_EMAIL"
                 android:inputType="textEmailAddress"
                 android:singleLine="true"
-                android:textSize="14sp"
+                android:textSize="16sp"
 
                 app:met_baseColor="@color/primary_light"
                 app:met_helperTextColor="@color/primary_light"
                 app:met_primaryColor="@color/accent"
                 app:met_textColor="@color/accent"
                 app:met_textColorHint="@color/primary_light"
-                app:met_underlineColor="@color/primary_light"/>
+                app:met_underlineColor="@color/primary_light"
+                app:met_typeface="fonts/RobotoCondensed-Regular.ttf"/>
 
             <com.mikepenz.iconics.view.IconicsImageView
                 android:id="@+id/icon_password"
@@ -87,7 +102,7 @@
                 android:scaleType="centerInside"
 
                 app:iiv_color="@color/primary_light"
-                app:iiv_icon="gmd-https"/>
+                app:iiv_icon="gmd-vpn-key"/>
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/editText_password"
@@ -99,18 +114,18 @@
                 android:layout_marginStart="10dp"
                 android:layout_toEndOf="@+id/icon_password"
                 android:layout_toRightOf="@+id/icon_password"
-                android:fontFamily="sans-serif"
                 android:hint="@string/HINT_PASSWORD"
                 android:inputType="textPassword"
                 android:singleLine="true"
-                android:textSize="14sp"
+                android:textSize="16sp"
 
                 app:met_baseColor="@color/primary_light"
                 app:met_helperTextColor="@color/primary_light"
                 app:met_primaryColor="@color/accent"
                 app:met_textColor="@color/accent"
                 app:met_textColorHint="@color/primary_light"
-                app:met_underlineColor="@color/primary_light"/>
+                app:met_underlineColor="@color/primary_light"
+                app:met_typeface="fonts/RobotoCondensed-Regular.ttf"/>
 
             <Button
                 android:id="@+id/button_entrar"
@@ -119,6 +134,7 @@
                 android:layout_below="@+id/editText_password"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
+                android:singleLine="false"
                 android:text="@string/BUTTON_LOGIN_ENTRAR"
                 android:textColor="@color/icons" />
         </RelativeLayout>
@@ -142,7 +158,8 @@
                 android:text="@string/TEXT_TAMBIEN"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/icons"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                />
 
             <com.facebook.login.widget.LoginButton
                 android:id="@+id/login_button"
@@ -162,7 +179,8 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/primary_light"
                 android:textIsSelectable="false"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:textStyle="bold|italic"/>
 
             <TextView
                 android:id="@+id/textView_olvida_password"
@@ -175,7 +193,8 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/primary_light"
                 android:textIsSelectable="false"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:textStyle="bold|italic"/>
         </LinearLayout>
 
     </LinearLayout>

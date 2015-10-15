@@ -2,15 +2,15 @@ package com.app.luis.androidapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
+import android.widget.ViewSwitcher;
+
 import com.app.luis.androidapp.R;
 import com.app.luis.androidapp.helpers.DataValidator;
 import com.app.luis.androidapp.helpers.Utils;
@@ -24,13 +24,15 @@ import com.facebook.login.widget.LoginButton;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.Transition;
 
-public class Login extends AppCompatActivity implements View.OnClickListener {
+public class Login extends AppCompatActivity implements KenBurnsView.TransitionListener, View.OnClickListener {
 
-    private EditText editTextEmail, editTextPassword, dialogEditTextRecoverEmail;
-    private Button buttonEntrar;
+    private EditText editTextEmail, editTextPassword, editTextEmailRestablece;
     private CallbackManager callbackManager;
+    private AlertDialog alertDialog;
+    private ViewSwitcher mViewSwitcher;
 
-    private TextView textViewNuevaCuenta, textViewOlvidaPassword;
+    private static final int TRANSITIONS_TO_SWITCH = 3;
+    private int mTransitionsCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,26 +43,20 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.layout_login);
 
         editTextEmail = (EditText) findViewById(R.id.editText_email);
-        dialogEditTextRecoverEmail = (EditText) findViewById(R.id.dialog_edit_text_recover_email);
         editTextPassword = (EditText) findViewById(R.id.editText_password);
-        buttonEntrar = (Button) findViewById(R.id.button_entrar);
-        textViewNuevaCuenta = (TextView) findViewById(R.id.textView_nueva_cuenta);
-        textViewOlvidaPassword = (TextView) findViewById(R.id.textView_olvida_password);
+
+        final Button buttonEntrar = (Button) findViewById(R.id.button_entrar);
+        final TextView textViewNuevaCuenta = (TextView) findViewById(R.id.textView_nueva_cuenta);
+        final TextView textViewOlvidaPassword = (TextView) findViewById(R.id.textView_olvida_password);
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
 
         // KenBurnsView de fondo
-        KenBurnsView kenBurnsView = (KenBurnsView) findViewById(R.id.backgroud);
-        kenBurnsView.setTransitionListener(new KenBurnsView.TransitionListener() {
-            @Override
-            public void onTransitionStart(Transition transition) {
+        mViewSwitcher = (ViewSwitcher) findViewById(R.id.viewSwitcher);
+        KenBurnsView bgLogin = (KenBurnsView) findViewById(R.id.bg_login);
+        KenBurnsView bgLogin2 = (KenBurnsView) findViewById(R.id.bg_login2);
+        bgLogin.setTransitionListener(this);
+        bgLogin2.setTransitionListener(this);
 
-            }
-
-            @Override
-            public void onTransitionEnd(Transition transition) {
-
-            }
-        });
 
         // Botones
         buttonEntrar.setOnClickListener(this);
@@ -90,6 +86,22 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         });
     }
 
+    // KenBurnsView de fondo
+    @Override
+    public void onTransitionStart(Transition transition) {
+
+    }
+
+    // KenBurnsView de fondo
+    @Override
+    public void onTransitionEnd(Transition transition) {
+        mTransitionsCount++;
+        if (mTransitionsCount == TRANSITIONS_TO_SWITCH) {
+            mViewSwitcher.showNext();
+            mTransitionsCount = 0;
+        }
+    }
+
     @Override
     public void onClick(View view) {
 
@@ -107,22 +119,35 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 break;
             case R.id.textView_olvida_password:
 
-                new MaterialDialog.Builder(this)
-                        .title("Restablecer contraseña")
-                        .customView(R.layout.dialog_reset_password, false)
-                        .positiveText("Restablecer")
-                        .negativeText("Cancelar")
-                        .titleColorRes(R.color.primary)
-                        .positiveColorRes(R.color.primary)
-                        .negativeColorRes(R.color.primary)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                final View dialogView = getLayoutInflater().inflate(R.layout.dialog_reset_password, null);
+                builder.setView(dialogView);
 
-                            @Override
-                            public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
+                editTextEmailRestablece = (EditText) dialogView.findViewById(R.id.dialog_edit_text_recover_email);
+                TextView textViewCancelar = (TextView) dialogView.findViewById(R.id.button_dialog_cancel);
+                TextView textViewRestablecer = (TextView) dialogView.findViewById(R.id.button_dialog_confirm);
 
-                            }
-                        })
-                        .show();
+                textViewCancelar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alertDialog.dismiss();
+                    }
+                });
+
+                textViewRestablecer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (emptyFieldDialog()) {
+                            Toast.makeText(getApplicationContext(), "Envía correo", Toast.LENGTH_LONG).show();
+                            alertDialog.dismiss();
+                        }
+                    }
+                });
+
+                alertDialog = builder.create();
+                alertDialog.setCancelable(false);
+                alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
 
                 break;
         }
@@ -147,14 +172,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         AppEventsLogger.deactivateApp(this);
     }
 
-    public boolean emptyField() {
-        if (Utils.checkEditTextNotEmpty(dialogEditTextRecoverEmail)) {
-            if (!DataValidator.isValidEmail(dialogEditTextRecoverEmail.getText().toString())) {
-                dialogEditTextRecoverEmail.setError("Correo inválido");
+    public boolean emptyFieldDialog() {
+        if (Utils.checkEditTextNotEmpty(this.editTextEmailRestablece)) {
+            if (!DataValidator.isValidEmail(this.editTextEmailRestablece.getText().toString())) {
+                this.editTextEmailRestablece.setError(Utils.stringFromResource(getApplicationContext(), R.string.INPUT_ERROR_CORREO_INVALIDO));
                 return false;
             }
         } else {
-            dialogEditTextRecoverEmail.setError(Utils.stringFromResource(Login.this, R.string.CAMPO_NO_PUEDE_SER_VACIO));
+            this.editTextEmailRestablece.setError(Utils.stringFromResource(Login.this, R.string.CAMPO_NO_PUEDE_SER_VACIO));
             return false;
         }
         return true;

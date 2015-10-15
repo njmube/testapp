@@ -16,4 +16,8 @@
     <string name="ACB_TITLE_NUEVA_CUENTA">Nueva cuenta</string>
 
     <string name="CAMPO_NO_PUEDE_SER_VACIO">Este campo no puede estar vacío</string>
+    <string name="INPUT_ERROR_CORREO_INVALIDO">Este correo no es válido</string>
+    <string name="DIALOG_TITULO_RESTABLECE_PASSWORD">Restablecer contraseña</string>
+    <string name="BUTTON_RESTABLECER">RESTABLECER</string>
+    <string name="BUTTON_CANCELAR">CANCELAR</string>
 </resources>

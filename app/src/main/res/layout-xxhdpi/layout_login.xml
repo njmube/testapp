@@ -6,12 +6,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.flaviofaria.kenburnsview.KenBurnsView
-        android:id="@+id/backgroud"
+    <ViewSwitcher
+        android:id="@+id/viewSwitcher"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/bg_login">
-    </com.flaviofaria.kenburnsview.KenBurnsView>
+        android:inAnimation="@android:anim/fade_in"
+        android:outAnimation="@android:anim/fade_out">
+
+        <com.flaviofaria.kenburnsview.KenBurnsView
+            android:id="@+id/bg_login"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/bg_login" />
+
+        <com.flaviofaria.kenburnsview.KenBurnsView
+            android:id="@+id/bg_login2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/bg_login2" />
+
+    </ViewSwitcher>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -144,7 +158,8 @@
                 android:text="@string/TEXT_TAMBIEN"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/icons"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                />
 
             <com.facebook.login.widget.LoginButton
                 android:id="@+id/login_button"
@@ -164,7 +179,8 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/primary_light"
                 android:textIsSelectable="false"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:textStyle="bold|italic"/>
 
             <TextView
                 android:id="@+id/textView_olvida_password"
@@ -177,7 +193,8 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/primary_light"
                 android:textIsSelectable="false"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:textStyle="bold|italic"/>
         </LinearLayout>
 
     </LinearLayout>
