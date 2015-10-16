@@ -11,5 +11,6 @@
 
     <color name="bg_tranparent">#c89c27b0</color>
     <color name="white">#FFFFFF</color>
+    <color name="foreground_material_light">#ffffff</color>
 
 </resources>
