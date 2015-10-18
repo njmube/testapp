@@ -110,7 +110,7 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
                 String email = this.editTextEmail.getText().toString();
                 String password = this.editTextPassword.getText().toString();
                 
-                Toast.makeText(getApplicationContext(), "Email: " + email + "\nPassword: " + password, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Email: " + email + "\nPassword: " + password, Toast.LENGTH_LONG).show();
                 
                 Intent intentHome = new Intent(this, Home.class);
                 startActivity(intentHome);

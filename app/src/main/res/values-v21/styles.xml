@@ -1,0 +1,64 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:navigationBarColor">@color/primary</item>
+
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        <item name="popupMenuStyle">@style/PopupMenu</item>
+
+        <item name="colorControlNormal">@color/icons</item>
+        <item name="colorControlActivated">@color/accent</item>
+        <item name="colorControlHighlight">@color/accent</item>
+
+        <item name="colorButtonNormal">@color/primary</item>
+
+        <!-- enable window content transitions -->
+        <item name="android:windowContentTransitions">true</item>
+        <!--<item name="android:windowTranslucentNavigation">true</item>-->
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
+    </style>
+
+    <!-- ActionBarStyle -->
+    <style name="ActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:titleTextStyle">@style/ActionBarTextAppearance</item>
+    </style>
+    <!-- ActionBar TextAppearance -->
+    <style name="ActionBarTextAppearance" parent="android:TextAppearance.Material.Widget.ActionBar.Title">
+        <item name="fontPath">fonts/RobotoCondensed-Regular.ttf</item>
+    </style>
+
+
+    <!-- PopUp menu -->
+    <style name="PopupMenu" parent="@style/Widget.AppCompat.Light.PopupMenu">
+        <item name="android:popupBackground">@color/primary</item>
+    </style>
+
+
+    <!-- AlertDialog -->
+    <style name="AppCompatAlertDialogStyle" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/primary</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:colorAccent">@color/accent</item>
+    </style>
+
+    <!--Dialog-->
+    <style name="textTitleDialog">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/primary</item>
+    </style>
+    <style name="buttonsDialog">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/primary_dark</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+</resources>

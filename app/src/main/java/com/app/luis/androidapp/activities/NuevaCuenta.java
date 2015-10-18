@@ -1,6 +1,8 @@
 package com.app.luis.androidapp.activities;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -14,6 +16,7 @@ import com.app.luis.androidapp.helpers.Utils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class NuevaCuenta extends AppCompatActivity {
 
@@ -36,12 +39,8 @@ public class NuevaCuenta extends AppCompatActivity {
         setContentView(R.layout.layout_nueva_cuenta);
         ButterKnife.bind(this);
 
-        toolbar.setTitle(R.string.ACB_TITLE_NUEVA_CUENTA);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
     }
 
     @Override
@@ -57,14 +56,18 @@ public class NuevaCuenta extends AppCompatActivity {
                 if(emptyFields()) {
                     Toast.makeText(getApplicationContext(), "Envia los datos", Toast.LENGTH_LONG).show();
                 }
-
                 break;
 
             case android.R.id.home:
-                finish();
+                NavUtils.navigateUpFromSameTask(this);
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     /**
