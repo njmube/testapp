@@ -43,11 +43,13 @@ dependencies {
     // Facebook connect
     compile 'com.facebook.android:facebook-android-sdk:+'
     // MaterialDialog
-    compile('com.afollestad.material-dialogs:core:0.8.3.0@aar') {
+    compile('com.github.afollestad.material-dialogs:core:0.8.5.4@aar') {
         transitive = true
     }
     // Tabs
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
     // Calligraphy
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
+    // MaterialDateTimePicker
+    compile 'com.wdullaer:materialdatetimepicker:2.1.1'
 }

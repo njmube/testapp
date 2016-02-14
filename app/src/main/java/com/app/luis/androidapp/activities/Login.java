@@ -1,9 +1,11 @@
 package com.app.luis.androidapp.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.app.luis.androidapp.R;
 import com.app.luis.androidapp.helpers.DataValidator;
 import com.app.luis.androidapp.helpers.Utils;
@@ -26,12 +31,11 @@ import com.flaviofaria.kenburnsview.Transition;
 
 public class Login extends AppCompatActivity implements KenBurnsView.TransitionListener, View.OnClickListener {
 
+    private static final int TRANSITIONS_TO_SWITCH = 3;
     private EditText editTextEmail, editTextPassword, editTextEmailRestablece;
     private CallbackManager callbackManager;
     private AlertDialog alertDialog;
     private ViewSwitcher mViewSwitcher;
-
-    private static final int TRANSITIONS_TO_SWITCH = 3;
     private int mTransitionsCount = 0;
 
     @Override
@@ -109,12 +113,12 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
             case R.id.button_entrar:
                 String email = this.editTextEmail.getText().toString();
                 String password = this.editTextPassword.getText().toString();
-                
+
                 //Toast.makeText(getApplicationContext(), "Email: " + email + "\nPassword: " + password, Toast.LENGTH_LONG).show();
-                
+
                 Intent intentHome = new Intent(this, Home.class);
                 startActivity(intentHome);
-                
+
                 break;
             case R.id.textView_nueva_cuenta:
 
@@ -124,35 +128,63 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
                 break;
             case R.id.textView_olvida_password:
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                final View dialogView = getLayoutInflater().inflate(R.layout.dialog_reset_password, null);
-                builder.setView(dialogView);
+                new MaterialDialog.Builder(this)
+                        .title(R.string.DIALOG_TITULO_RESTABLECE_PASSWORD)
+                        .content("Escribe tu correo electrónico para enviarte un e-mail de recuperación.")
+                        .inputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
+                        .positiveText(R.string.BUTTON_RESTABLECER)
+                        .positiveColorRes(R.color.primary)
+                        .alwaysCallInputCallback() // this forces the callback to be invoked with every input change
+                        .input(R.string.HINT_EMAIL, 0, false, new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                                if (emptyFieldDialog(input.toString())) {
+                                    dialog.setContent(R.string.INPUT_ERROR_CORREO_INVALIDO);
+                                    dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+                                } else {
+                                    dialog.setContent("Escribe tu correo electrónico para enviarte un e-mail de recuperación.");
+                                    dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+                                }
+                            }
+                        })
+                        .dismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                Toast.makeText(getApplicationContext(), "Envía correo", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .theme(Theme.LIGHT)
+                        .show();
 
-                editTextEmailRestablece = (EditText) dialogView.findViewById(R.id.dialog_edit_text_recover_email);
-                TextView textViewCancelar = (TextView) dialogView.findViewById(R.id.button_dialog_cancel);
-                TextView textViewRestablecer = (TextView) dialogView.findViewById(R.id.button_dialog_confirm);
-
-                textViewCancelar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        alertDialog.dismiss();
-                    }
-                });
-
-                textViewRestablecer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (emptyFieldDialog()) {
-                            Toast.makeText(getApplicationContext(), "Envía correo", Toast.LENGTH_LONG).show();
-                            alertDialog.dismiss();
-                        }
-                    }
-                });
-
-                alertDialog = builder.create();
-                alertDialog.setCancelable(false);
-                alertDialog.setCanceledOnTouchOutside(false);
-                alertDialog.show();
+//                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                final View dialogView = getLayoutInflater().inflate(R.layout.dialog_reset_password, null);
+//                builder.setView(dialogView);
+//
+//                editTextEmailRestablece = (EditText) dialogView.findViewById(R.id.dialog_edit_text_recover_email);
+//                TextView textViewCancelar = (TextView) dialogView.findViewById(R.id.button_dialog_cancel);
+//                TextView textViewRestablecer = (TextView) dialogView.findViewById(R.id.button_dialog_confirm);
+//
+//                textViewCancelar.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        alertDialog.dismiss();
+//                    }
+//                });
+//
+//                textViewRestablecer.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        if (emptyFieldDialog()) {
+//                            Toast.makeText(getApplicationContext(), "Envía correo", Toast.LENGTH_LONG).show();
+//                            alertDialog.dismiss();
+//                        }
+//                    }
+//                });
+//
+//                alertDialog = builder.create();
+//                alertDialog.setCancelable(false);
+//                alertDialog.setCanceledOnTouchOutside(false);
+//                alertDialog.show();
 
                 break;
         }
@@ -188,5 +220,9 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
             return false;
         }
         return true;
+    }
+
+    public boolean emptyFieldDialog(String string) {
+        return string.isEmpty() || !DataValidator.isValidEmail(string);
     }
 }
