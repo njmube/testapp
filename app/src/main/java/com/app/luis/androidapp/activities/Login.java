@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.widget.*;
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewSwitcher;
+
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
@@ -24,9 +26,13 @@ import com.facebook.login.widget.LoginButton;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.Transition;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class Login extends AppCompatActivity implements KenBurnsView.TransitionListener {
 
-    private static final int TRANSITIONS_TO_SWITCH = 3;
+
     @Bind(R.id.viewSwitcher)
     ViewSwitcher mViewSwitcher;
     @Bind(R.id.bg_login)
@@ -37,14 +43,11 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
     EditText editTextEmail;
     @Bind(R.id.editText_password)
     EditText editTextPassword;
-    @Bind(R.id.button_entrar)
-    Button botonEntrar;
-    @Bind(R.id.textView_nueva_cuenta)
-    TextView textViewNuevaCuenta;
-    @Bind(R.id.textView_olvida_password)
-    TextView textViewOlvidaPassword;
+
     @Bind(R.id.login_button)
     LoginButton loginButton;
+
+    private static final int TRANSITIONS_TO_SWITCH = 3;
     private CallbackManager callbackManager;
     private int mTransitionsCount = 0;
 
@@ -139,48 +142,32 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
     public void showDialogOlvidaPassword() {
         new MaterialDialog.Builder(this)
                 .title(R.string.DIALOG_TITULO_RESTABLECE_PASSWORD)
-                .content("Escribe tu correo electrónico para enviarte un e-mail de recuperación.")
+                .titleColorRes(R.color.primary)
+                .content("Escribe tu dirección de email para enviarte un mensaje de recuperación.")
                 .inputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
                 .positiveText(R.string.BUTTON_RESTABLECER)
+                .negativeText(R.string.BUTTON_CANCELAR)
                 .positiveColorRes(R.color.primary)
-                .alwaysCallInputCallback() // this forces the callback to be invoked with every input change
-                .input(R.string.HINT_EMAIL, 0, false, new MaterialDialog.InputCallback() {
+                .negativeColorRes(R.color.primary)
+                .widgetColorRes(R.color.primary)
+                .input(R.string.HINT_EMAIL, 0, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
-                        if (emptyFieldDialog(input.toString())) {
-                            dialog.setContent(R.string.INPUT_ERROR_CORREO_INVALIDO);
-                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-                        } else {
-                            dialog.setContent("Escribe tu correo electrónico para enviarte un e-mail de recuperación.");
-                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
-                        }
+
                     }
                 })
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        Toast.makeText(getApplicationContext(), "Entro "+dialog.getInputEditText().getText().toString(), Toast.LENGTH_LONG).show();
+                        if (dialog.getInputEditText().getText().toString().isEmpty() || !DataValidator.isValidEmail(dialog.getInputEditText().getText().toString())) {
+                            Toast.makeText(getApplicationContext(), "Escribe un correo válido", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Envío a " + dialog.getInputEditText().getText().toString(), Toast.LENGTH_LONG).show();
+                        }
                     }
                 })
                 .theme(Theme.LIGHT)
                 .show();
     }
 
-
-//    public boolean emptyFieldDialog() {
-//        if (Utils.checkEditTextNotEmpty(this.editTextEmailRestablece)) {
-//            if (!DataValidator.isValidEmail(this.editTextEmailRestablece.getText().toString())) {
-//                this.editTextEmailRestablece.setError(Utils.stringFromResource(getApplicationContext(), R.string.INPUT_ERROR_CORREO_INVALIDO));
-//                return false;
-//            }
-//        } else {
-//            this.editTextEmailRestablece.setError(Utils.stringFromResource(Login.this, R.string.CAMPO_NO_PUEDE_SER_VACIO));
-//            return false;
-//        }
-//        return true;
-//    }
-
-    public boolean emptyFieldDialog(String string) {
-        return string.isEmpty() || !DataValidator.isValidEmail(string);
-    }
 }
