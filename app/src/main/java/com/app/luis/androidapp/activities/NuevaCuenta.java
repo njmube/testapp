@@ -1,6 +1,7 @@
 package com.app.luis.androidapp.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -18,10 +19,11 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.app.luis.androidapp.R;
 import com.app.luis.androidapp.helpers.DataValidator;
@@ -29,6 +31,9 @@ import com.app.luis.androidapp.helpers.Utils;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -91,79 +96,79 @@ public class NuevaCuenta extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_done_action:
                 if (emptyFields()) {
-//                    new MaterialDialog.Builder(this)
-//                            .content("Espera un momento...")
-//                            .progress(true, 0)
-//                            .progressIndeterminateStyle(false)
-//                            .cancelable(false)
-//                            .widgetColorRes(R.color.primary)
-//                            .theme(Theme.LIGHT)
-//                            .showListener(new DialogInterface.OnShowListener() {
-//                                @Override
-//                                public void onShow(final DialogInterface dialog) {
-//                                    final MaterialDialog materialDialog = (MaterialDialog) dialog;
-//
-//                                    startThread(new Runnable() {
-//
-//                                        private int cont;
-//
-//                                        @Override
-//                                        public void run() {
-//                                            while (cont <= 10 && !Thread.currentThread().isInterrupted()) {
-//                                                try {
-//                                                    Thread.sleep(1000);
-//                                                } catch (InterruptedException e) {
-//                                                    break;
-//                                                }
-//                                                cont++;
-//                                            }
-//
-//                                            runOnUiThread(new Runnable() {
-//                                                @Override
-//                                                public void run() {
-//                                                    mThread = null;
-//                                                    materialDialog.cancel();
-//                                                    Toast.makeText(getApplicationContext(), "Te has registrado correctamente", Toast.LENGTH_LONG).show();
-//                                                    finish();
-//                                                }
-//                                            });
-//                                        }
-//                                    });
-//                                }
-//                            })
-//                            .show();
-
-                    String url = "http://192.168.0.18/android-app/public/api/cliente/store";
-                    StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                            new Response.Listener<String>() {
+                    new MaterialDialog.Builder(this)
+                            .content("Espera un momento...")
+                            .progress(true, 0)
+                            .progressIndeterminateStyle(false)
+                            .cancelable(false)
+                            .widgetColorRes(R.color.primary)
+                            .theme(Theme.LIGHT)
+                            .showListener(new DialogInterface.OnShowListener() {
                                 @Override
-                                public void onResponse(String response) {
-                                    Log.d("RESPONSE_POST", response.toString());
-                                    Toast.makeText(getApplicationContext(), "Te has registrado correctamente", Toast.LENGTH_LONG).show();
-                                }
-                            },
-                            new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Log.d("RESPONSE_POST", error.toString());
-                                }
-                            }
-                    ) {
-                        @Override
-                        protected Map<String, String> getParams() {
-                            Map<String, String> params = new HashMap<>();
-                            // the POST parameters:
-                            params.put("nombre", editTextNombre.getText().toString());
-                            params.put("apellido", editTextApellido.getText().toString());
-                            params.put("genero", editTextGenero.getText().toString());
-                            params.put("email", editTextEmail.getText().toString());
-                            params.put("fecha_nacimiento", editTextFechaNacimiento.getText().toString());
-                            params.put("password", editTextPassword.getText().toString());
-                            return params;
-                        }
-                    };
+                                public void onShow(final DialogInterface dialog) {
+                                    final MaterialDialog materialDialog = (MaterialDialog) dialog;
 
-                    Volley.newRequestQueue(this).add(postRequest);
+                                    startThread(new Runnable() {
+
+                                        @Override
+                                        public void run() {
+
+                                            String url = (true) ? "http://54.183.186.164/api/cliente/store" : "http://192.168.0.18/android-app/public/api/cliente/store";
+
+                                            Map<String, String> params = new HashMap<>();
+                                            // the POST parameters:
+                                            params.put("nombre", editTextNombre.getText().toString());
+                                            params.put("apellido", editTextApellido.getText().toString());
+                                            params.put("sexo", editTextGenero.getText().toString());
+                                            params.put("email", editTextEmail.getText().toString());
+                                            params.put("fecha_nacimiento", editTextFechaNacimiento.getText().toString());
+                                            params.put("password", editTextPassword.getText().toString());
+
+                                            JsonObjectRequest postRequest = new JsonObjectRequest(
+                                                    Request.Method.POST,
+                                                    url,
+                                                    new JSONObject(params),
+                                                    new Response.Listener<JSONObject>() {
+                                                        @Override
+                                                        public void onResponse(JSONObject response) {
+                                                            Log.d("RESPONSE_SERVER", response.toString());
+                                                            try {
+                                                                boolean success = response.getBoolean("status");
+                                                                if (success) {
+                                                                    mThread = null;
+                                                                    materialDialog.cancel();
+                                                                    Toast.makeText(getApplicationContext(), "Te has registrado correctamente", Toast.LENGTH_LONG).show();
+                                                                    finish();
+                                                                }
+                                                            } catch (JSONException e) {
+                                                                mThread = null;
+                                                                materialDialog.cancel();
+                                                                Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                                            }
+                                                        }
+                                                    },
+                                                    new Response.ErrorListener() {
+                                                        @Override
+                                                        public void onErrorResponse(VolleyError error) {
+                                                            mThread = null;
+                                                            materialDialog.cancel();
+                                                            Log.d("RESPONSE_SERVER", error.getMessage());
+                                                            Toast.makeText(getApplicationContext(), "ERROR: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                                                        }
+                                                    });
+
+                                            postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                                                    6000,
+                                                    1,
+                                                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+                                            ));
+
+                                            Volley.newRequestQueue(NuevaCuenta.this).add(postRequest);
+                                        }
+                                    });
+                                }
+                            })
+                            .show();
                 }
                 break;
 
