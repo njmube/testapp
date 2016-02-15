@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,12 +18,21 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.app.luis.androidapp.R;
 import com.app.luis.androidapp.helpers.DataValidator;
 import com.app.luis.androidapp.helpers.Utils;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,7 +59,13 @@ public class NuevaCuenta extends AppCompatActivity {
     EditText editTextPassword;
     @Bind(R.id.edit_text_confirm_password)
     EditText editTextConfirmPassword;
+    private Thread mThread;
     private int genero = -1;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +75,9 @@ public class NuevaCuenta extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -72,7 +91,79 @@ public class NuevaCuenta extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_done_action:
                 if (emptyFields()) {
-                    Toast.makeText(getApplicationContext(), "Envia los datos", Toast.LENGTH_LONG).show();
+//                    new MaterialDialog.Builder(this)
+//                            .content("Espera un momento...")
+//                            .progress(true, 0)
+//                            .progressIndeterminateStyle(false)
+//                            .cancelable(false)
+//                            .widgetColorRes(R.color.primary)
+//                            .theme(Theme.LIGHT)
+//                            .showListener(new DialogInterface.OnShowListener() {
+//                                @Override
+//                                public void onShow(final DialogInterface dialog) {
+//                                    final MaterialDialog materialDialog = (MaterialDialog) dialog;
+//
+//                                    startThread(new Runnable() {
+//
+//                                        private int cont;
+//
+//                                        @Override
+//                                        public void run() {
+//                                            while (cont <= 10 && !Thread.currentThread().isInterrupted()) {
+//                                                try {
+//                                                    Thread.sleep(1000);
+//                                                } catch (InterruptedException e) {
+//                                                    break;
+//                                                }
+//                                                cont++;
+//                                            }
+//
+//                                            runOnUiThread(new Runnable() {
+//                                                @Override
+//                                                public void run() {
+//                                                    mThread = null;
+//                                                    materialDialog.cancel();
+//                                                    Toast.makeText(getApplicationContext(), "Te has registrado correctamente", Toast.LENGTH_LONG).show();
+//                                                    finish();
+//                                                }
+//                                            });
+//                                        }
+//                                    });
+//                                }
+//                            })
+//                            .show();
+
+                    String url = "http://192.168.0.18/android-app/public/api/cliente/store";
+                    StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    Log.d("RESPONSE_POST", response.toString());
+                                    Toast.makeText(getApplicationContext(), "Te has registrado correctamente", Toast.LENGTH_LONG).show();
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.d("RESPONSE_POST", error.toString());
+                                }
+                            }
+                    ) {
+                        @Override
+                        protected Map<String, String> getParams() {
+                            Map<String, String> params = new HashMap<>();
+                            // the POST parameters:
+                            params.put("nombre", editTextNombre.getText().toString());
+                            params.put("apellido", editTextApellido.getText().toString());
+                            params.put("genero", editTextGenero.getText().toString());
+                            params.put("email", editTextEmail.getText().toString());
+                            params.put("fecha_nacimiento", editTextFechaNacimiento.getText().toString());
+                            params.put("password", editTextPassword.getText().toString());
+                            return params;
+                        }
+                    };
+
+                    Volley.newRequestQueue(this).add(postRequest);
                 }
                 break;
 
@@ -199,5 +290,12 @@ public class NuevaCuenta extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private void startThread(Runnable run) {
+        if (mThread != null)
+            mThread.interrupt();
+        mThread = new Thread(run);
+        mThread.start();
     }
 }

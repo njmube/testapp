@@ -33,6 +33,8 @@ dependencies {
     compile 'com.flaviofaria:kenburnsview:1.0.6'
     // Material Edit Inputs
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
+    // Volley Networking
+    compile 'com.mcxiaoke.volley:library:1.0.19'
     // Iconos
     compile 'com.mikepenz:iconics-core:1.7.6@aar'
     compile 'com.mikepenz:google-material-typeface:1.2.0.1@aar'
@@ -52,4 +54,5 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
     // MaterialDateTimePicker
     compile 'com.wdullaer:materialdatetimepicker:2.1.1'
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }
