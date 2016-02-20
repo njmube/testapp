@@ -135,12 +135,14 @@ public class NuevaCuenta extends AppCompatActivity {
                                                             try {
                                                                 boolean success = response.getBoolean("status");
                                                                 if (success) {
+                                                                    mThread.interrupt();
                                                                     mThread = null;
                                                                     materialDialog.cancel();
                                                                     Toast.makeText(getApplicationContext(), "Te has registrado correctamente", Toast.LENGTH_LONG).show();
                                                                     finish();
                                                                 }
                                                             } catch (JSONException e) {
+                                                                mThread.interrupt();
                                                                 mThread = null;
                                                                 materialDialog.cancel();
                                                                 Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -150,6 +152,7 @@ public class NuevaCuenta extends AppCompatActivity {
                                                     new Response.ErrorListener() {
                                                         @Override
                                                         public void onErrorResponse(VolleyError error) {
+                                                            mThread.interrupt();
                                                             mThread = null;
                                                             materialDialog.cancel();
                                                             Log.d("RESPONSE_SERVER", error.getMessage());

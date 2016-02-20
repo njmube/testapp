@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
@@ -33,6 +31,7 @@ import butterknife.OnClick;
 public class Login extends AppCompatActivity implements KenBurnsView.TransitionListener {
 
 
+    private static final int TRANSITIONS_TO_SWITCH = 3;
     @Bind(R.id.viewSwitcher)
     ViewSwitcher mViewSwitcher;
     @Bind(R.id.bg_login)
@@ -43,11 +42,8 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
     EditText editTextEmail;
     @Bind(R.id.editText_password)
     EditText editTextPassword;
-
     @Bind(R.id.login_button)
     LoginButton loginButton;
-
-    private static final int TRANSITIONS_TO_SWITCH = 3;
     private CallbackManager callbackManager;
     private int mTransitionsCount = 0;
 
