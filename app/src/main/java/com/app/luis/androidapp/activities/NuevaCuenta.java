@@ -80,6 +80,7 @@ public class NuevaCuenta extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -303,6 +304,7 @@ public class NuevaCuenta extends AppCompatActivity {
     private void startThread(Runnable run) {
         if (mThread != null)
             mThread.interrupt();
+
         mThread = new Thread(run);
         mThread.start();
     }
