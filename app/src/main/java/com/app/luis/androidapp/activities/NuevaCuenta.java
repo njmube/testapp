@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -35,6 +36,7 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -114,13 +116,13 @@ public class NuevaCuenta extends AppCompatActivity {
                                         @Override
                                         public void run() {
 
-                                            String url = (true) ? "http://54.183.186.164/api/cliente/store" : "http://192.168.0.18/android-app/public/api/cliente/store";
+                                            String url = (true) ? "http://54.183.186.164/api/v1/usuarios" : "http://192.168.0.18/android-app/public/api/v1/usuarios";
 
                                             Map<String, String> params = new HashMap<>();
                                             // the POST parameters:
                                             params.put("nombre", editTextNombre.getText().toString());
                                             params.put("apellido", editTextApellido.getText().toString());
-                                            params.put("sexo", editTextGenero.getText().toString());
+                                            params.put("sexo", editTextGenero.getText().toString().charAt(0) + "");
                                             params.put("email", editTextEmail.getText().toString());
                                             params.put("fecha_nacimiento", editTextFechaNacimiento.getText().toString());
                                             params.put("password", editTextPassword.getText().toString());
@@ -153,19 +155,35 @@ public class NuevaCuenta extends AppCompatActivity {
                                                     new Response.ErrorListener() {
                                                         @Override
                                                         public void onErrorResponse(VolleyError error) {
+
                                                             mThread.interrupt();
                                                             mThread = null;
                                                             materialDialog.cancel();
-                                                            Log.d("RESPONSE_SERVER", error.getMessage());
-                                                            Toast.makeText(getApplicationContext(), "ERROR: " + error.getMessage(), Toast.LENGTH_LONG).show();
-                                                        }
-                                                    });
 
-                                            postRequest.setRetryPolicy(new DefaultRetryPolicy(
-                                                    6000,
-                                                    1,
-                                                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-                                            ));
+                                                            try {
+                                                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                                                JSONObject jsonObject = new JSONObject(responseBody);
+
+                                                                Log.d("RESPONSE_SERVER", jsonObject.getJSONArray("errores").optString(0));
+                                                                Toast.makeText(getApplicationContext(), "ERROR: " + jsonObject.getJSONArray("errores").optString(0), Toast.LENGTH_LONG).show();
+                                                            } catch (JSONException e) {
+                                                                //Handle a malformed json response
+                                                            } catch (UnsupportedEncodingException e) {
+
+                                                            }
+
+
+                                                        }
+                                                    }) {
+                                                @Override
+                                                public Map<String, String> getHeaders() throws AuthFailureError {
+
+                                                    HashMap<String, String> map = new HashMap<String, String>();
+                                                    map.put("Accept", "application/json");
+
+                                                    return map;
+                                                }
+                                            };
 
                                             Volley.newRequestQueue(NuevaCuenta.this).add(postRequest);
                                         }
