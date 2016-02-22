@@ -20,6 +20,7 @@
     <string name="DIALOG_TITULO_RESTABLECE_PASSWORD">Restablecer contraseña</string>
     <string name="BUTTON_RESTABLECER">Restablecer</string>
     <string name="BUTTON_CANCELAR">Cancelar</string>
+    <string name="BUTTON_ACEPTAR">Aceptar</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

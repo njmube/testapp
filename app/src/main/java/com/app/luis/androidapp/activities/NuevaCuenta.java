@@ -16,11 +16,13 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnEditorAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -29,23 +31,18 @@ import com.android.volley.toolbox.Volley;
 import com.app.luis.androidapp.R;
 import com.app.luis.androidapp.helpers.DataValidator;
 import com.app.luis.androidapp.helpers.Utils;
+import com.app.luis.androidapp.utils.EnvironmentData;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnEditorAction;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class NuevaCuenta extends AppCompatActivity {
 
@@ -116,9 +113,8 @@ public class NuevaCuenta extends AppCompatActivity {
                                         @Override
                                         public void run() {
 
-                                            String url = (true) ? "http://54.183.186.164/api/v1/usuarios" : "http://192.168.0.18/android-app/public/api/v1/usuarios";
-
                                             Map<String, String> params = new HashMap<>();
+
                                             // the POST parameters:
                                             params.put("nombre", editTextNombre.getText().toString());
                                             params.put("apellido", editTextApellido.getText().toString());
@@ -127,60 +123,68 @@ public class NuevaCuenta extends AppCompatActivity {
                                             params.put("fecha_nacimiento", editTextFechaNacimiento.getText().toString());
                                             params.put("password", editTextPassword.getText().toString());
 
+                                            Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
+                                                @Override
+                                                public void onResponse(JSONObject response) {
+
+                                                    Log.d("RESPONSE_SERVER", response.toString());
+                                                    boolean success = false;
+                                                    try {
+                                                        success = response.getBoolean("status");
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    if (success) {
+                                                        mThread.interrupt();
+                                                        mThread = null;
+                                                        materialDialog.cancel();
+                                                        Toast.makeText(getApplicationContext(), "Te has registrado correctamente", Toast.LENGTH_LONG).show();
+                                                        finish();
+                                                    }
+                                                }
+                                            };
+
+                                            Response.ErrorListener errorListener = new Response.ErrorListener() {
+                                                @Override
+                                                public void onErrorResponse(VolleyError error) {
+                                                    try {
+                                                        int statusCode = error.networkResponse.statusCode;
+                                                        String responseBody = new String(error.networkResponse.data, "utf-8");
+                                                        JSONObject jsonObject = new JSONObject(responseBody);
+
+                                                        String msg = "Error " + statusCode + ": \n";
+                                                        int lenght = jsonObject.getJSONArray("errores").length();
+                                                        for (int i = 0; i < lenght; i++) {
+                                                            msg += (i == lenght - 1) ? jsonObject.getJSONArray("errores").optString(i)
+                                                                    : jsonObject.getJSONArray("errores").optString(i) + "\n";
+                                                        }
+
+                                                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                                                        Log.d("RESPONSE_SERVER", msg);
+
+                                                        materialDialog.cancel();
+                                                        mThread.interrupt();
+                                                        mThread = null;
+
+                                                    } catch (JSONException e) {
+                                                        //Handle a malformed json response
+                                                    } catch (UnsupportedEncodingException e) {
+
+                                                    }
+                                                }
+                                            };
+
+
                                             JsonObjectRequest postRequest = new JsonObjectRequest(
                                                     Request.Method.POST,
-                                                    url,
+                                                    EnvironmentData.BASE_URL + "usuarios",
                                                     new JSONObject(params),
-                                                    new Response.Listener<JSONObject>() {
-                                                        @Override
-                                                        public void onResponse(JSONObject response) {
-                                                            Log.d("RESPONSE_SERVER", response.toString());
-                                                            try {
-                                                                boolean success = response.getBoolean("status");
-                                                                if (success) {
-                                                                    mThread.interrupt();
-                                                                    mThread = null;
-                                                                    materialDialog.cancel();
-                                                                    Toast.makeText(getApplicationContext(), "Te has registrado correctamente", Toast.LENGTH_LONG).show();
-                                                                    finish();
-                                                                }
-                                                            } catch (JSONException e) {
-                                                                mThread.interrupt();
-                                                                mThread = null;
-                                                                materialDialog.cancel();
-                                                                Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                                                            }
-                                                        }
-                                                    },
-                                                    new Response.ErrorListener() {
-                                                        @Override
-                                                        public void onErrorResponse(VolleyError error) {
-
-                                                            mThread.interrupt();
-                                                            mThread = null;
-                                                            materialDialog.cancel();
-
-                                                            try {
-                                                                String responseBody = new String(error.networkResponse.data, "utf-8");
-                                                                JSONObject jsonObject = new JSONObject(responseBody);
-
-                                                                Log.d("RESPONSE_SERVER", jsonObject.getJSONArray("errores").optString(0));
-                                                                Toast.makeText(getApplicationContext(), "ERROR: " + jsonObject.getJSONArray("errores").optString(0), Toast.LENGTH_LONG).show();
-                                                            } catch (JSONException e) {
-                                                                //Handle a malformed json response
-                                                            } catch (UnsupportedEncodingException e) {
-
-                                                            }
-
-
-                                                        }
-                                                    }) {
+                                                    jsonObjectListener,
+                                                    errorListener) {
                                                 @Override
                                                 public Map<String, String> getHeaders() throws AuthFailureError {
-
                                                     HashMap<String, String> map = new HashMap<String, String>();
                                                     map.put("Accept", "application/json");
-
                                                     return map;
                                                 }
                                             };

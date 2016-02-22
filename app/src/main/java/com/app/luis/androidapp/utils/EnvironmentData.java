@@ -5,6 +5,7 @@ package com.app.luis.androidapp.utils;
  */
 public class EnvironmentData {
     public static final String BASE_IP = "http://54.183.186.164";
+//    public static final String BASE_IP = "http://192.168.0.18/android-app/public/api/v1/";
     public static final String BASE_URL = BASE_IP + "/api/v1/";
     public static final String FIREBASE_URL = "https://<proyecto>.firebaseio.com/";
 }
