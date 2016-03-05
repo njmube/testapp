@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -14,6 +15,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.app.luis.androidapp.R;
 import com.app.luis.androidapp.helpers.DataValidator;
+import com.app.luis.androidapp.helpers.Utils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -27,6 +29,7 @@ import com.flaviofaria.kenburnsview.Transition;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 
 public class Login extends AppCompatActivity implements KenBurnsView.TransitionListener {
 
@@ -42,6 +45,8 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
     EditText editTextEmail;
     @Bind(R.id.editText_password)
     EditText editTextPassword;
+    @Bind(R.id.button_entrar)
+    Button button_entrar;
     @Bind(R.id.login_button)
     LoginButton loginButton;
     private CallbackManager callbackManager;
@@ -164,6 +169,31 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
                 })
                 .theme(Theme.LIGHT)
                 .show();
+    }
+
+    @OnTextChanged(R.id.editText_email)
+    public void onEditorActionEmail() {
+        button_entrar.setEnabled(enableLoginButton());
+    }
+
+    @OnTextChanged(R.id.editText_password)
+    public void onEditorActionPassword() {
+        button_entrar.setEnabled(enableLoginButton());
+    }
+
+    public boolean enableLoginButton() {
+        if (!Utils.checkEditTextNotEmpty(this.editTextPassword)) {
+            return false;
+        }
+
+        if (Utils.checkEditTextNotEmpty(this.editTextEmail)) {
+            if (!DataValidator.isValidEmail(this.editTextEmail.getText().toString())) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
     }
 
 }

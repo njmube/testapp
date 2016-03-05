@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="100dp"
             android:focusableInTouchMode="true"
             android:gravity="center"
             android:orientation="vertical"
@@ -137,7 +137,8 @@
                 android:singleLine="false"
                 android:text="@string/BUTTON_LOGIN_ENTRAR"
                 android:textColor="@color/icons"
-                android:textSize="18dp"/>
+                android:textSize="18dp"
+                android:enabled="false"/>
         </RelativeLayout>
 
         <LinearLayout
@@ -147,7 +148,7 @@
             android:focusable="false"
             android:gravity="top|center"
             android:orientation="vertical"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="60dp">
 
             <TextView
                 android:id="@+id/textView"
