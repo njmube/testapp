@@ -35,6 +35,8 @@ dependencies {
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     // Volley Networking
     compile 'com.mcxiaoke.volley:library:1.0.19'
+    // Gson
+    compile 'com.google.code.gson:gson:2.6.1'
     // Iconos
     compile 'com.mikepenz:iconics-core:1.7.6@aar'
     compile 'com.mikepenz:google-material-typeface:1.2.0.1@aar'
