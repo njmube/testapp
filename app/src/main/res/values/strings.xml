@@ -22,7 +22,6 @@
     <string name="BUTTON_CANCELAR">Cancelar</string>
     <string name="BUTTON_ACEPTAR">Aceptar</string>
 
-<!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="ACB_TITULO_NUEVA_CUENTA">Nueva cuenta</string>
     <string name="HINT_FECHA_NACIMIENTO">Fecha de nacimiento</string>

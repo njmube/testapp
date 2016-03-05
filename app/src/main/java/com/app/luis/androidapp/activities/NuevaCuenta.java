@@ -40,9 +40,7 @@ import org.json.JSONObject;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class NuevaCuenta extends AppCompatActivity {
 
@@ -128,18 +126,17 @@ public class NuevaCuenta extends AppCompatActivity {
                                                 public void onResponse(JSONObject response) {
 
                                                     Log.d("RESPONSE_SERVER", response.toString());
-                                                    boolean success = false;
+                                                    String token = "";
                                                     try {
-                                                        success = response.getBoolean("status");
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                    if (success) {
+                                                        token = response.getString("token");
                                                         mThread.interrupt();
                                                         mThread = null;
                                                         materialDialog.cancel();
-                                                        Toast.makeText(getApplicationContext(), "Te has registrado correctamente", Toast.LENGTH_LONG).show();
+                                                        Toast.makeText(getApplicationContext(), "Token: \n" + token, Toast.LENGTH_LONG).show();
                                                         finish();
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                        Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
                                                     }
                                                 }
                                             };
@@ -153,10 +150,13 @@ public class NuevaCuenta extends AppCompatActivity {
                                                         JSONObject jsonObject = new JSONObject(responseBody);
 
                                                         String msg = "Error " + statusCode + ": \n";
-                                                        int lenght = jsonObject.getJSONArray("errores").length();
-                                                        for (int i = 0; i < lenght; i++) {
-                                                            msg += (i == lenght - 1) ? jsonObject.getJSONArray("errores").optString(i)
-                                                                    : jsonObject.getJSONArray("errores").optString(i) + "\n";
+
+                                                        JSONObject errors = jsonObject.getJSONObject("errors");
+
+                                                        Iterator iterator   = errors.keys();
+                                                        while(iterator.hasNext()) {
+                                                            String campo = (String) iterator.next();
+                                                            msg += errors.getJSONArray(campo).toString();
                                                         }
 
                                                         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
@@ -174,7 +174,6 @@ public class NuevaCuenta extends AppCompatActivity {
                                                 }
                                             };
 
-
                                             JsonObjectRequest postRequest = new JsonObjectRequest(
                                                     Request.Method.POST,
                                                     EnvironmentData.BASE_URL + "usuarios",
@@ -184,7 +183,8 @@ public class NuevaCuenta extends AppCompatActivity {
                                                 @Override
                                                 public Map<String, String> getHeaders() throws AuthFailureError {
                                                     HashMap<String, String> map = new HashMap<String, String>();
-                                                    map.put("Accept", "application/json");
+                                                    map.put("Accept", EnvironmentData.ACCEPT_HEADER);
+                                                    map.put("Content-Type", EnvironmentData.CONTENT_TYPE);
                                                     return map;
                                                 }
                                             };
