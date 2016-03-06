@@ -2,6 +2,8 @@ package com.app.luis.androidapp.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -26,11 +28,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.app.luis.androidapp.enums.UsuarioEnum;
 import com.app.luis.androidapp.R;
 import com.app.luis.androidapp.api.factory.FactoryResponse;
 import com.app.luis.androidapp.api.models.ErrorResponse;
 import com.app.luis.androidapp.helpers.DataValidator;
 import com.app.luis.androidapp.helpers.Utils;
+import com.app.luis.androidapp.models.Usuario;
+import com.app.luis.androidapp.utils.AppConstants;
 import com.app.luis.androidapp.utils.Environment;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -116,7 +121,6 @@ public class NuevaCuenta extends AppCompatActivity {
                                     final MaterialDialog materialDialog = (MaterialDialog) dialog;
 
                                     startThread(new Runnable() {
-
                                         @Override
                                         public void run() {
 
@@ -133,10 +137,15 @@ public class NuevaCuenta extends AppCompatActivity {
                                                 @Override
                                                 public void onResponse(JSONObject response) {
                                                     Log.d("RESPONSE_SERVER", response.toString());
-                                                    String token = "";
                                                     try {
-                                                        token = response.getString("token");
-                                                        Toast.makeText(getApplicationContext(), "Token: \n" + token, Toast.LENGTH_LONG).show();
+                                                        Usuario usuario = new Gson().fromJson(response.getJSONObject("data").toString(), Usuario.class);
+                                                        storeSharedPref(usuario);
+                                                        Toast.makeText(getApplicationContext(), "Token: \n" + usuario.getToken(), Toast.LENGTH_LONG).show();
+
+                                                        Intent i = new Intent(getApplicationContext(), Home.class);
+                                                        i.putExtra(UsuarioEnum.TOKEN.getValue(), usuario.getToken());
+                                                        startActivity(i);
+
                                                     } catch (JSONException e) {
                                                         e.printStackTrace();
                                                         Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -274,11 +283,19 @@ public class NuevaCuenta extends AppCompatActivity {
     }
 
 
-    /**
-     * Validacion de campos no sean vacíos
-     *
-     * @return boolean
-     */
+    public void storeSharedPref(Usuario usuario) {
+        SharedPreferences preferences = getSharedPreferences(AppConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(UsuarioEnum.TOKEN.getValue(), usuario.getToken());
+        editor.putString(UsuarioEnum.ID.getValue(), usuario.getId());
+        editor.putString(UsuarioEnum.NOMBRE.getValue(), usuario.getNombre());
+        editor.putString(UsuarioEnum.APELLIDO.getValue(), usuario.getApellido());
+        editor.putString(UsuarioEnum.FECHA_NACIMIENTO.getValue(), usuario.getFecha_nacimiento().toString());
+        editor.putString(UsuarioEnum.EMAIL.getValue(), usuario.getEmail());
+        editor.putString(UsuarioEnum.SEXO.getValue(), usuario.getSexo() + "");
+        editor.commit();
+    }
+
     public boolean emptyFields() {
         if (!Utils.checkEditTextNotEmpty(this.editTextNombre)) {
             editTextNombre.setError(Utils.stringFromResource(getApplicationContext(), R.string.CAMPO_NO_PUEDE_SER_VACIO));

@@ -1,32 +1,27 @@
 package com.app.luis.androidapp.models;
 
-import java.sql.Date;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Luis on 20/02/2016.
  */
 public class Usuario {
 
+    private String token;
     private String id;
     private String nombre;
     private String apellido;
-    private Date fechaNacimiento;
+    private Date fecha_nacimiento;
     private String email;
     private char sexo;
-    private String password;
-    private String rememberToken;
 
-    public Usuario(String nombre, String apellido, Date fechaNacimiento, String email, char sexo, String password) {
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.fechaNacimiento = fechaNacimiento;
-        this.email = email;
-        this.sexo = sexo;
-        this.password = password;
-    }
+    public String getToken() { return token; }
 
+    public void setToken(String token) { this.token = token;}
 
     public String getId() {
         return id;
@@ -52,18 +47,13 @@ public class Usuario {
         this.apellido = apellido;
     }
 
-    public Date getFechaNacimiento() {
-        return fechaNacimiento;
+    public Date getFecha_nacimiento() {
+        return fecha_nacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
-
-    public void setFechaNacimiento(String fechaNacimiento) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-        java.util.Date parsed = format.parse(fechaNacimiento);
-        this.fechaNacimiento = new Date(parsed.getTime());
+    public void setFecha_nacimiento(String fecha_nacimiento) throws ParseException {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        this.fecha_nacimiento = format.parse(fecha_nacimiento);
     }
 
     public String getEmail() {
@@ -82,24 +72,15 @@ public class Usuario {
         this.sexo = sexo;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRememberToken() {
-        return rememberToken;
-    }
-
-    public void setRememberToken(String rememberToken) {
-        this.rememberToken = rememberToken;
-    }
-
     @Override
     public String toString() {
-        return this.nombre + " " + this.apellido;
+        return "UsuarioEnum{" +
+                "id='" + id + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", fecha_nacimiento=" + fecha_nacimiento +
+                ", email='" + email + '\'' +
+                ", sexo=" + sexo +
+                '}';
     }
 }

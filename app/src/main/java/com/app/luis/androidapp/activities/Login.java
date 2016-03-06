@@ -1,10 +1,13 @@
 package com.app.luis.androidapp.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,8 +17,11 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.app.luis.androidapp.R;
+import com.app.luis.androidapp.enums.UsuarioEnum;
 import com.app.luis.androidapp.helpers.DataValidator;
 import com.app.luis.androidapp.helpers.Utils;
+import com.app.luis.androidapp.models.Usuario;
+import com.app.luis.androidapp.utils.AppConstants;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -59,6 +65,16 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.layout_login);
         ButterKnife.bind(this);
+
+        SharedPreferences preferences = getSharedPreferences(AppConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        String token = preferences.getString(UsuarioEnum.TOKEN.getValue(), "");
+
+        if (!TextUtils.isEmpty(token)) {
+            Intent i = new Intent(getApplicationContext(), Home.class);
+            i.putExtra(UsuarioEnum.TOKEN.getValue(), token);
+            startActivity(i);
+            finish();
+        }
 
         // KenBurnsView de fondo
         bgLogin.setTransitionListener(this);
