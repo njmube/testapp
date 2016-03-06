@@ -16,31 +16,40 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnEditorAction;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.app.luis.androidapp.R;
+import com.app.luis.androidapp.api.factory.FactoryResponse;
+import com.app.luis.androidapp.api.models.ErrorResponse;
 import com.app.luis.androidapp.helpers.DataValidator;
 import com.app.luis.androidapp.helpers.Utils;
-import com.app.luis.androidapp.utils.EnvironmentData;
+import com.app.luis.androidapp.utils.Environment;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnEditorAction;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class NuevaCuenta extends AppCompatActivity {
 
@@ -112,7 +121,6 @@ public class NuevaCuenta extends AppCompatActivity {
                                         public void run() {
 
                                             Map<String, String> params = new HashMap<>();
-
                                             // the POST parameters:
                                             params.put("nombre", editTextNombre.getText().toString());
                                             params.put("apellido", editTextApellido.getText().toString());
@@ -124,19 +132,19 @@ public class NuevaCuenta extends AppCompatActivity {
                                             Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
                                                 @Override
                                                 public void onResponse(JSONObject response) {
-
                                                     Log.d("RESPONSE_SERVER", response.toString());
                                                     String token = "";
                                                     try {
                                                         token = response.getString("token");
-                                                        mThread.interrupt();
-                                                        mThread = null;
-                                                        materialDialog.cancel();
                                                         Toast.makeText(getApplicationContext(), "Token: \n" + token, Toast.LENGTH_LONG).show();
-                                                        finish();
                                                     } catch (JSONException e) {
                                                         e.printStackTrace();
                                                         Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                                    } finally {
+                                                        materialDialog.cancel();
+                                                        mThread.interrupt();
+                                                        mThread = null;
+                                                        finish();
                                                     }
                                                 }
                                             };
@@ -147,47 +155,44 @@ public class NuevaCuenta extends AppCompatActivity {
                                                     try {
                                                         int statusCode = error.networkResponse.statusCode;
                                                         String responseBody = new String(error.networkResponse.data, "utf-8");
-                                                        JSONObject jsonObject = new JSONObject(responseBody);
 
-                                                        String msg = "Error " + statusCode + ": \n";
+                                                        Log.d("STATUS_CODE", statusCode + "");
+                                                        Log.d("RESPONSE_BODY", responseBody);
 
-                                                        JSONObject errors = jsonObject.getJSONObject("errors");
+                                                        ErrorResponse responseClass = new FactoryResponse().createHttpResponse(statusCode);
+                                                        ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
+                                                        Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
 
-                                                        Iterator iterator   = errors.keys();
-                                                        while(iterator.hasNext()) {
-                                                            String campo = (String) iterator.next();
-                                                            msg += errors.getJSONArray(campo).toString();
-                                                        }
-
-                                                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-                                                        Log.d("RESPONSE_SERVER", msg);
-
+                                                    } catch (UnsupportedEncodingException e) {
+                                                        e.printStackTrace();
+                                                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                                    } finally {
                                                         materialDialog.cancel();
                                                         mThread.interrupt();
                                                         mThread = null;
-
-                                                    } catch (JSONException e) {
-                                                        //Handle a malformed json response
-                                                    } catch (UnsupportedEncodingException e) {
-
                                                     }
                                                 }
                                             };
 
                                             JsonObjectRequest postRequest = new JsonObjectRequest(
                                                     Request.Method.POST,
-                                                    EnvironmentData.BASE_URL + "usuarios",
+                                                    Environment.getInstance(getApplicationContext()).getBASE_URL() + "registro",
                                                     new JSONObject(params),
                                                     jsonObjectListener,
                                                     errorListener) {
                                                 @Override
                                                 public Map<String, String> getHeaders() throws AuthFailureError {
                                                     HashMap<String, String> map = new HashMap<String, String>();
-                                                    map.put("Accept", EnvironmentData.ACCEPT_HEADER);
-                                                    map.put("Content-Type", EnvironmentData.CONTENT_TYPE);
+                                                    map.put("Accept", Environment.ACCEPT_HEADER);
+                                                    map.put("Content-Type", Environment.CONTENT_TYPE);
                                                     return map;
                                                 }
                                             };
+
+                                            postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                                                    15000,
+                                                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                                                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
                                             Volley.newRequestQueue(NuevaCuenta.this).add(postRequest);
                                         }
