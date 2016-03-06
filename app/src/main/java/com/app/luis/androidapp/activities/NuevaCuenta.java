@@ -123,7 +123,6 @@ public class NuevaCuenta extends AppCompatActivity {
                                     startThread(new Runnable() {
                                         @Override
                                         public void run() {
-
                                             Map<String, String> params = new HashMap<>();
                                             // the POST parameters:
                                             params.put("nombre", editTextNombre.getText().toString());

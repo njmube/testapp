@@ -72,15 +72,4 @@ public class Usuario {
         this.sexo = sexo;
     }
 
-    @Override
-    public String toString() {
-        return "UsuarioEnum{" +
-                "id='" + id + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", fecha_nacimiento=" + fecha_nacimiento +
-                ", email='" + email + '\'' +
-                ", sexo=" + sexo +
-                '}';
-    }
 }
