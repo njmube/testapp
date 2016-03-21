@@ -7,11 +7,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.app.luis.androidapp.R;
 import com.app.luis.androidapp.fragments.HomeAdapter;
 import com.astuetz.PagerSlidingTabStrip;
+import com.facebook.Profile;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -39,6 +42,8 @@ public class Home extends AppCompatActivity {
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(pager);
         tabs.setBackgroundColor(getColor());
+
+        //Toast.makeText(this, Profile.getCurrentProfile().getName(), Toast.LENGTH_LONG).show();
     }
 
     @Override

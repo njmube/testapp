@@ -6,6 +6,7 @@ package com.app.luis.androidapp.enums;
 public enum UsuarioEnum {
     TOKEN("token"),
     ID("id"),
+    ID_FACEBOOK("id_facebook"),
     NOMBRE("nombre"),
     APELLIDO("apellido"),
     FECHA_NACIMIENTO("fecha_nacimiento"),

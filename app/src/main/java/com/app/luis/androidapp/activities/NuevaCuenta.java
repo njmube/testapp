@@ -58,7 +58,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class NuevaCuenta extends AppCompatActivity {
 
-    private final String[] generos = new String[]{"Hombre", "Mujer"};
+
     @Bind(R.id.toolbar_actionbar)
     Toolbar toolbar;
     @Bind(R.id.edit_text_nombre)
@@ -75,8 +75,11 @@ public class NuevaCuenta extends AppCompatActivity {
     EditText editTextPassword;
     @Bind(R.id.edit_text_confirm_password)
     EditText editTextConfirmPassword;
+
     private Thread mThread;
     private int genero = -1;
+    private final String[] generos = new String[]{"Hombre", "Mujer"};
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -124,6 +127,7 @@ public class NuevaCuenta extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             Map<String, String> params = new HashMap<>();
+
                                             // the POST parameters:
                                             params.put("nombre", editTextNombre.getText().toString());
                                             params.put("apellido", editTextApellido.getText().toString());
@@ -135,19 +139,15 @@ public class NuevaCuenta extends AppCompatActivity {
                                             Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
                                                 @Override
                                                 public void onResponse(JSONObject response) {
-                                                    Log.d("RESPONSE_SERVER", response.toString());
                                                     try {
                                                         Usuario usuario = new Gson().fromJson(response.getJSONObject("data").toString(), Usuario.class);
                                                         storeSharedPref(usuario);
                                                         Toast.makeText(getApplicationContext(), "Token: \n" + usuario.getToken(), Toast.LENGTH_LONG).show();
-
-                                                        Intent i = new Intent(getApplicationContext(), Home.class);
-                                                        i.putExtra(UsuarioEnum.TOKEN.getValue(), usuario.getToken());
-                                                        startActivity(i);
-
+                                                        setResult(RESULT_OK);
                                                     } catch (JSONException e) {
                                                         e.printStackTrace();
                                                         Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                                        setResult(RESULT_CANCELED);
                                                     } finally {
                                                         materialDialog.cancel();
                                                         mThread.interrupt();
@@ -161,13 +161,9 @@ public class NuevaCuenta extends AppCompatActivity {
                                                 @Override
                                                 public void onErrorResponse(VolleyError error) {
                                                     try {
-                                                        int statusCode = error.networkResponse.statusCode;
                                                         String responseBody = new String(error.networkResponse.data, "utf-8");
 
-                                                        Log.d("STATUS_CODE", statusCode + "");
-                                                        Log.d("RESPONSE_BODY", responseBody);
-
-                                                        ErrorResponse responseClass = new FactoryResponse().createHttpResponse(statusCode);
+                                                        ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
                                                         ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
                                                         Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
 
@@ -206,13 +202,14 @@ public class NuevaCuenta extends AppCompatActivity {
                                         }
                                     });
                                 }
-                            })
-                            .show();
+                            }).show();
                 }
                 break;
 
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                //NavUtils.navigateUpFromSameTask(this);
+                setResult(RESULT_CANCELED);
+                finish();
                 break;
         }
         return true;

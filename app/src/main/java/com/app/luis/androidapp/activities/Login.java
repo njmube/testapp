@@ -1,5 +1,6 @@
 package com.app.luis.androidapp.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,21 +17,44 @@ import android.widget.ViewSwitcher;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.app.luis.androidapp.R;
+import com.app.luis.androidapp.api.factory.FactoryResponse;
+import com.app.luis.androidapp.api.models.ErrorResponse;
 import com.app.luis.androidapp.enums.UsuarioEnum;
 import com.app.luis.androidapp.helpers.DataValidator;
 import com.app.luis.androidapp.helpers.Utils;
 import com.app.luis.androidapp.models.Usuario;
 import com.app.luis.androidapp.utils.AppConstants;
+import com.app.luis.androidapp.utils.Environment;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.Transition;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,7 +63,7 @@ import butterknife.OnTextChanged;
 
 public class Login extends AppCompatActivity implements KenBurnsView.TransitionListener {
 
-
+    private static final int NUEVA_CUENTA = 0;
     private static final int TRANSITIONS_TO_SWITCH = 3;
     @Bind(R.id.viewSwitcher)
     ViewSwitcher mViewSwitcher;
@@ -55,6 +79,7 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
     Button button_entrar;
     @Bind(R.id.login_button)
     LoginButton loginButton;
+
     private CallbackManager callbackManager;
     private int mTransitionsCount = 0;
 
@@ -81,14 +106,122 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
         bgLogin2.setTransitionListener(this);
 
         // Login con Facebook
+        loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
+            private ProfileTracker profileTracker;
+
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Toast.makeText(Login.this, "User ID: "
-                        + loginResult.getAccessToken().getUserId()
-                        + "\n" +
-                        "Auth Token: "
-                        + loginResult.getAccessToken().getToken(), Toast.LENGTH_LONG).show();
+
+                if (Profile.getCurrentProfile() == null) {
+                    profileTracker = new ProfileTracker() {
+                        @Override
+                        protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                            this.stopTracking();
+                        }
+                    };
+                    profileTracker.startTracking();
+                }
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                Map<String, String> params = new HashMap<>();
+
+                                try {
+                                    // the POST parameters:
+                                    params.put("id_facebook", object.getString("id"));
+                                    params.put("nombre", object.getString("first_name"));
+                                    params.put("apellido", object.getString("last_name"));
+                                    params.put("sexo", (object.getString("gender").equals("female")) ? "M" : "H");
+                                    params.put("email", object.getString("email"));
+                                    params.put("fecha_nacimiento", object.getString("birthday"));
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+
+                                Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        try {
+
+                                            Usuario usuario = new Gson().fromJson(response.getJSONObject("data").toString(), Usuario.class);
+                                            storeSharedPref(usuario);
+                                            Toast.makeText(getApplicationContext(), "Token: \n" + usuario.getToken(), Toast.LENGTH_LONG).show();
+
+                                            Intent i = new Intent(getApplicationContext(), Home.class);
+                                            startActivity(i);
+                                            finish();
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                            Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
+
+                                        }
+                                    }
+                                };
+
+                                Response.ErrorListener errorListener = new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        try {
+                                            String responseBody = new String(error.networkResponse.data, "utf-8");
+                                            ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
+                                            ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
+
+                                            Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
+
+                                        } catch (UnsupportedEncodingException e) {
+                                            e.printStackTrace();
+                                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                };
+
+                                JsonObjectRequest postRequest = new JsonObjectRequest(
+                                        Request.Method.POST,
+                                        Environment.getInstance(getApplicationContext()).getBASE_URL() + "registro?type=fb",
+                                        new JSONObject(params),
+                                        jsonObjectListener,
+                                        errorListener) {
+                                    @Override
+                                    public Map<String, String> getHeaders() throws AuthFailureError {
+                                        HashMap<String, String> map = new HashMap<String, String>();
+                                        map.put("Accept", Environment.ACCEPT_HEADER);
+                                        map.put("Content-Type", Environment.CONTENT_TYPE);
+                                        return map;
+                                    }
+                                };
+
+                                postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                                        15000,
+                                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                                Volley.newRequestQueue(Login.this).add(postRequest);
+                            }
+                        }
+                );
+
+                Bundle bundle = new Bundle();
+                bundle.putString("fields", "id, first_name, last_name, birthday, email, gender");
+                request.setParameters(bundle);
+                request.executeAsync();
+
+//                Toast.makeText(Login.this, "User ID: "
+//                        + loginResult.getAccessToken().getUserId()
+//                        + "\n" +
+//                        "Auth Token: "
+//                        + loginResult.getAccessToken().getToken()
+//                        + "\n" +
+//                        "Permissions: "
+//                        + loginResult.getAccessToken().getPermissions(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -119,7 +252,15 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == NUEVA_CUENTA) {
+            if (resultCode == RESULT_OK) {
+                Intent i = new Intent(getApplicationContext(), Home.class);
+                startActivity(i);
+                finish();
+            }
+        } else {
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     // KenBurnsView de fondo
@@ -143,16 +284,18 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
         String email = this.editTextEmail.getText().toString();
         String password = this.editTextPassword.getText().toString();
 
-        Toast.makeText(getApplicationContext(), "Email: " + email + "\nPassword: " + password, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), "Email: " + email + "\nPassword: " + password, Toast.LENGTH_LONG).show();
 
         Intent intentHome = new Intent(this, Home.class);
         startActivity(intentHome);
+        finish();
     }
 
     @OnClick(R.id.textView_nueva_cuenta)
     public void nuevaCuenta() {
         Intent intentNuevaCuenta = new Intent(this, NuevaCuenta.class);
-        startActivity(intentNuevaCuenta);
+        startActivityForResult(intentNuevaCuenta, NUEVA_CUENTA);
+        //startActivity(intentNuevaCuenta);
     }
 
     @OnClick(R.id.textView_olvida_password)
@@ -210,6 +353,20 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
             return false;
         }
         return true;
+    }
+
+    public void storeSharedPref(Usuario usuario) {
+        SharedPreferences preferences = getSharedPreferences(AppConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(UsuarioEnum.TOKEN.getValue(), usuario.getToken());
+        editor.putString(UsuarioEnum.ID.getValue(), usuario.getId());
+        editor.putString(UsuarioEnum.ID_FACEBOOK.getValue(), usuario.getId_facebook());
+        editor.putString(UsuarioEnum.NOMBRE.getValue(), usuario.getNombre());
+        editor.putString(UsuarioEnum.APELLIDO.getValue(), usuario.getApellido());
+        editor.putString(UsuarioEnum.FECHA_NACIMIENTO.getValue(), usuario.getFecha_nacimiento().toString());
+        editor.putString(UsuarioEnum.EMAIL.getValue(), usuario.getEmail());
+        editor.putString(UsuarioEnum.SEXO.getValue(), usuario.getSexo() + "");
+        editor.commit();
     }
 
 }

@@ -13,15 +13,20 @@ public class Usuario {
 
     private String token;
     private String id;
+    private String id_facebook;
     private String nombre;
     private String apellido;
     private Date fecha_nacimiento;
     private String email;
     private char sexo;
 
-    public String getToken() { return token; }
+    public String getToken() {
+        return token;
+    }
 
-    public void setToken(String token) { this.token = token;}
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public String getId() {
         return id;
@@ -29,6 +34,18 @@ public class Usuario {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getId_facebook() {
+        return id_facebook;
+    }
+
+    public void setId_facebook(String id_facebook) {
+        this.id_facebook = id_facebook;
+    }
+
+    public void setFecha_nacimiento(Date fecha_nacimiento) {
+        this.fecha_nacimiento = fecha_nacimiento;
     }
 
     public String getNombre() {
