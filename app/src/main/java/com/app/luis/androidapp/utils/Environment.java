@@ -20,7 +20,6 @@ public class Environment {
 
     private Environment(Context context) {
         this.context = context;
-
         String BASE_IP = (isLocalEnviroment()) ? "http://192.168.0.18/android-api/public" : "http://54.219.134.90";
         BASE_URL = BASE_IP + "/api/";
     }

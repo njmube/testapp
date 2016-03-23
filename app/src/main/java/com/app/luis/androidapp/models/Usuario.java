@@ -16,7 +16,7 @@ public class Usuario {
     private String id_facebook;
     private String nombre;
     private String apellido;
-    private Date fecha_nacimiento;
+    private String fecha_nacimiento;
     private String email;
     private char sexo;
 
@@ -44,7 +44,7 @@ public class Usuario {
         this.id_facebook = id_facebook;
     }
 
-    public void setFecha_nacimiento(Date fecha_nacimiento) {
+    public void setFecha_nacimiento(String fecha_nacimiento) {
         this.fecha_nacimiento = fecha_nacimiento;
     }
 
@@ -64,13 +64,8 @@ public class Usuario {
         this.apellido = apellido;
     }
 
-    public Date getFecha_nacimiento() {
+    public String getFecha_nacimiento() {
         return fecha_nacimiento;
-    }
-
-    public void setFecha_nacimiento(String fecha_nacimiento) throws ParseException {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        this.fecha_nacimiento = format.parse(fecha_nacimiento);
     }
 
     public String getEmail() {
@@ -89,4 +84,21 @@ public class Usuario {
         this.sexo = sexo;
     }
 
+    public String getNombreCompleto() {
+        return this.nombre + " " + this.apellido;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "apellido='" + apellido + '\'' +
+                ", token='" + token + '\'' +
+                ", id='" + id + '\'' +
+                ", id_facebook='" + id_facebook + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", fecha_nacimiento='" + fecha_nacimiento + '\'' +
+                ", email='" + email + '\'' +
+                ", sexo=" + sexo +
+                '}';
+    }
 }

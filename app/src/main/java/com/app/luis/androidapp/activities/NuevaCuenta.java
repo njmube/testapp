@@ -2,14 +2,9 @@ package com.app.luis.androidapp.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,46 +13,35 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnEditorAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.app.luis.androidapp.enums.UsuarioEnum;
 import com.app.luis.androidapp.R;
 import com.app.luis.androidapp.api.factory.FactoryResponse;
 import com.app.luis.androidapp.api.models.ErrorResponse;
 import com.app.luis.androidapp.helpers.DataValidator;
 import com.app.luis.androidapp.helpers.Utils;
+import com.app.luis.androidapp.models.PerfilActivo;
 import com.app.luis.androidapp.models.Usuario;
-import com.app.luis.androidapp.utils.AppConstants;
 import com.app.luis.androidapp.utils.Environment;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnEditorAction;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
 public class NuevaCuenta extends AppCompatActivity {
-
 
     @Bind(R.id.toolbar_actionbar)
     Toolbar toolbar;
@@ -80,12 +64,6 @@ public class NuevaCuenta extends AppCompatActivity {
     private int genero = -1;
     private final String[] generos = new String[]{"Hombre", "Mujer"};
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,10 +72,6 @@ public class NuevaCuenta extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -127,7 +101,6 @@ public class NuevaCuenta extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             Map<String, String> params = new HashMap<>();
-
                                             // the POST parameters:
                                             params.put("nombre", editTextNombre.getText().toString());
                                             params.put("apellido", editTextApellido.getText().toString());
@@ -141,8 +114,8 @@ public class NuevaCuenta extends AppCompatActivity {
                                                 public void onResponse(JSONObject response) {
                                                     try {
                                                         Usuario usuario = new Gson().fromJson(response.getJSONObject("data").toString(), Usuario.class);
-                                                        storeSharedPref(usuario);
-                                                        Toast.makeText(getApplicationContext(), "Token: \n" + usuario.getToken(), Toast.LENGTH_LONG).show();
+                                                        PerfilActivo.getInstance().setUsuario(usuario);
+                                                        PerfilActivo.getInstance().updateInfo(getApplicationContext());
                                                         setResult(RESULT_OK);
                                                     } catch (JSONException e) {
                                                         e.printStackTrace();
@@ -162,11 +135,10 @@ public class NuevaCuenta extends AppCompatActivity {
                                                 public void onErrorResponse(VolleyError error) {
                                                     try {
                                                         String responseBody = new String(error.networkResponse.data, "utf-8");
-
                                                         ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
                                                         ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
-                                                        Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
 
+                                                        Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
                                                     } catch (UnsupportedEncodingException e) {
                                                         e.printStackTrace();
                                                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -273,24 +245,11 @@ public class NuevaCuenta extends AppCompatActivity {
         datePickerDialog.dismissOnPause(true);
         datePickerDialog.showYearPickerFirst(true);
         datePickerDialog.setMaxDate(Calendar.getInstance());
-        datePickerDialog.setAccentColor(Color.parseColor(getResources().getString(R.color.primary)));
+        datePickerDialog.setAccentColor(com.app.luis.androidapp.utils.Utils.getColor(getApplicationContext(), R.color.primary));
         datePickerDialog.setTitle(getResources().getString(R.string.HINT_FECHA_NACIMIENTO));
         datePickerDialog.show(getFragmentManager(), "Datepickerdialog");
     }
 
-
-    public void storeSharedPref(Usuario usuario) {
-        SharedPreferences preferences = getSharedPreferences(AppConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(UsuarioEnum.TOKEN.getValue(), usuario.getToken());
-        editor.putString(UsuarioEnum.ID.getValue(), usuario.getId());
-        editor.putString(UsuarioEnum.NOMBRE.getValue(), usuario.getNombre());
-        editor.putString(UsuarioEnum.APELLIDO.getValue(), usuario.getApellido());
-        editor.putString(UsuarioEnum.FECHA_NACIMIENTO.getValue(), usuario.getFecha_nacimiento().toString());
-        editor.putString(UsuarioEnum.EMAIL.getValue(), usuario.getEmail());
-        editor.putString(UsuarioEnum.SEXO.getValue(), usuario.getSexo() + "");
-        editor.commit();
-    }
 
     public boolean emptyFields() {
         if (!Utils.checkEditTextNotEmpty(this.editTextNombre)) {

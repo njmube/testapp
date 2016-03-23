@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -31,17 +30,11 @@ import com.app.luis.androidapp.api.models.ErrorResponse;
 import com.app.luis.androidapp.enums.UsuarioEnum;
 import com.app.luis.androidapp.helpers.DataValidator;
 import com.app.luis.androidapp.helpers.Utils;
+import com.app.luis.androidapp.models.PerfilActivo;
 import com.app.luis.androidapp.models.Usuario;
 import com.app.luis.androidapp.utils.AppConstants;
 import com.app.luis.androidapp.utils.Environment;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
+import com.facebook.*;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -85,24 +78,24 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
-        setContentView(R.layout.layout_login);
-        ButterKnife.bind(this);
 
         SharedPreferences preferences = getSharedPreferences(AppConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
         String token = preferences.getString(UsuarioEnum.TOKEN.getValue(), "");
 
         if (!TextUtils.isEmpty(token)) {
             Intent i = new Intent(getApplicationContext(), Home.class);
-            i.putExtra(UsuarioEnum.TOKEN.getValue(), token);
             startActivity(i);
             finish();
-        }
+        } else {
+            FacebookSdk.sdkInitialize(getApplicationContext());
+            callbackManager = CallbackManager.Factory.create();
+            setContentView(R.layout.layout_login);
+            ButterKnife.bind(this);
 
-        // KenBurnsView de fondo
-        bgLogin.setTransitionListener(this);
-        bgLogin2.setTransitionListener(this);
+            // KenBurnsView de fondo
+            bgLogin.setTransitionListener(this);
+            bgLogin2.setTransitionListener(this);
+        }
     }
 
     @Override
@@ -153,8 +146,6 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
         String email = this.editTextEmail.getText().toString();
         String password = this.editTextPassword.getText().toString();
 
-        //Toast.makeText(getApplicationContext(), "Email: " + email + "\nPassword: " + password, Toast.LENGTH_LONG).show();
-
         Intent intentHome = new Intent(this, Home.class);
         startActivity(intentHome);
         finish();
@@ -162,7 +153,9 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
 
     @OnClick(R.id.login_button)
     public void loginFB() {
+
         final ProgressDialog progressDialog = ProgressDialog.show(this, "", "Espera un momento...", true);
+
         // Login con Facebook
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile, email, user_birthday, user_friends"));
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -171,7 +164,9 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
 
             @Override
             public void onSuccess(final LoginResult loginResult) {
+
                 progressDialog.setMessage("Obteniendo usuario...");
+
                 if (Profile.getCurrentProfile() == null) {
                     profileTracker = new ProfileTracker() {
                         @Override
@@ -188,9 +183,8 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
 
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                progressDialog.setMessage("Guardando usuario...");
 
-                                Log.d("CUMPLE_PUTO", object.toString());
+                                progressDialog.setMessage("Guardando datos...");
 
                                 Map<String, String> params = new HashMap<>();
 
@@ -205,9 +199,9 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
                                     params.put("password", object.getString("id"));
 
                                 } catch (JSONException e) {
-
                                     e.printStackTrace();
                                     Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
+
                                     progressDialog.dismiss();
                                 }
 
@@ -215,9 +209,13 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
                                     @Override
                                     public void onResponse(JSONObject response) {
                                         try {
-
                                             Usuario usuario = new Gson().fromJson(response.getJSONObject("data").toString(), Usuario.class);
-                                            storeSharedPref(usuario);
+
+                                            PerfilActivo.getInstance().setUsuario(usuario);
+                                            PerfilActivo.getInstance().updateInfo(getApplicationContext());
+
+                                            progressDialog.dismiss();
+
                                             Toast.makeText(getApplicationContext(), "Token: \n" + usuario.getToken(), Toast.LENGTH_LONG).show();
 
                                             Intent i = new Intent(getApplicationContext(), Home.class);
@@ -225,8 +223,10 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
                                             finish();
 
                                         } catch (JSONException e) {
+
                                             e.printStackTrace();
                                             Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                            progressDialog.dismiss();
                                         }
                                     }
                                 };
@@ -240,6 +240,7 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
                                             ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
 
                                             LoginManager.getInstance().logOut();
+                                            progressDialog.dismiss();
 
                                             Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
 
@@ -281,25 +282,18 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
                 bundle.putString("fields", "id, first_name, last_name, birthday, email, gender");
                 request.setParameters(bundle);
                 request.executeAsync();
-
-//                Toast.makeText(Login.this, "User ID: "
-//                        + loginResult.getAccessToken().getUserId()
-//                        + "\n" +
-//                        "Auth Token: "
-//                        + loginResult.getAccessToken().getToken()
-//                        + "\n" +
-//                        "Permissions: "
-//                        + loginResult.getAccessToken().getPermissions(), Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onCancel() {
                 Toast.makeText(Login.this, "Cancelado", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
             }
 
             @Override
             public void onError(FacebookException error) {
                 Toast.makeText(Login.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
             }
         });
     }
@@ -308,7 +302,6 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
     public void nuevaCuenta() {
         Intent intentNuevaCuenta = new Intent(this, NuevaCuenta.class);
         startActivityForResult(intentNuevaCuenta, NUEVA_CUENTA);
-        //startActivity(intentNuevaCuenta);
     }
 
     @OnClick(R.id.textView_olvida_password)
@@ -367,19 +360,4 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
         }
         return true;
     }
-
-    public void storeSharedPref(Usuario usuario) {
-        SharedPreferences preferences = getSharedPreferences(AppConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(UsuarioEnum.TOKEN.getValue(), usuario.getToken());
-        editor.putString(UsuarioEnum.ID.getValue(), usuario.getId());
-        editor.putString(UsuarioEnum.ID_FACEBOOK.getValue(), usuario.getId_facebook());
-        editor.putString(UsuarioEnum.NOMBRE.getValue(), usuario.getNombre());
-        editor.putString(UsuarioEnum.APELLIDO.getValue(), usuario.getApellido());
-        editor.putString(UsuarioEnum.FECHA_NACIMIENTO.getValue(), usuario.getFecha_nacimiento().toString());
-        editor.putString(UsuarioEnum.EMAIL.getValue(), usuario.getEmail());
-        editor.putString(UsuarioEnum.SEXO.getValue(), usuario.getSexo() + "");
-        editor.commit();
-    }
-
 }
