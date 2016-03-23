@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -42,8 +43,8 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.Transition;
 import com.google.gson.Gson;
@@ -77,8 +78,6 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
     EditText editTextPassword;
     @Bind(R.id.button_entrar)
     Button button_entrar;
-    @Bind(R.id.login_button)
-    LoginButton loginButton;
 
     private CallbackManager callbackManager;
     private int mTransitionsCount = 0;
@@ -104,136 +103,6 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
         // KenBurnsView de fondo
         bgLogin.setTransitionListener(this);
         bgLogin2.setTransitionListener(this);
-
-        // Login con Facebook
-        loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-
-            private ProfileTracker profileTracker;
-
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-
-                if (Profile.getCurrentProfile() == null) {
-                    profileTracker = new ProfileTracker() {
-                        @Override
-                        protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                            this.stopTracking();
-                        }
-                    };
-                    profileTracker.startTracking();
-                }
-
-                GraphRequest request = GraphRequest.newMeRequest(
-                        loginResult.getAccessToken(),
-                        new GraphRequest.GraphJSONObjectCallback() {
-
-                            @Override
-                            public void onCompleted(JSONObject object, GraphResponse response) {
-                                Map<String, String> params = new HashMap<>();
-
-                                try {
-                                    // the POST parameters:
-                                    params.put("id_facebook", object.getString("id"));
-                                    params.put("nombre", object.getString("first_name"));
-                                    params.put("apellido", object.getString("last_name"));
-                                    params.put("sexo", (object.getString("gender").equals("female")) ? "M" : "H");
-                                    params.put("email", object.getString("email"));
-                                    params.put("fecha_nacimiento", object.getString("birthday"));
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                    Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-
-                                Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-                                        try {
-
-                                            Usuario usuario = new Gson().fromJson(response.getJSONObject("data").toString(), Usuario.class);
-                                            storeSharedPref(usuario);
-                                            Toast.makeText(getApplicationContext(), "Token: \n" + usuario.getToken(), Toast.LENGTH_LONG).show();
-
-                                            Intent i = new Intent(getApplicationContext(), Home.class);
-                                            startActivity(i);
-                                            finish();
-
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                            Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
-
-                                        }
-                                    }
-                                };
-
-                                Response.ErrorListener errorListener = new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        try {
-                                            String responseBody = new String(error.networkResponse.data, "utf-8");
-                                            ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
-                                            ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
-
-                                            Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
-
-                                        } catch (UnsupportedEncodingException e) {
-                                            e.printStackTrace();
-                                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                };
-
-                                JsonObjectRequest postRequest = new JsonObjectRequest(
-                                        Request.Method.POST,
-                                        Environment.getInstance(getApplicationContext()).getBASE_URL() + "registro?type=fb",
-                                        new JSONObject(params),
-                                        jsonObjectListener,
-                                        errorListener) {
-                                    @Override
-                                    public Map<String, String> getHeaders() throws AuthFailureError {
-                                        HashMap<String, String> map = new HashMap<String, String>();
-                                        map.put("Accept", Environment.ACCEPT_HEADER);
-                                        map.put("Content-Type", Environment.CONTENT_TYPE);
-                                        return map;
-                                    }
-                                };
-
-                                postRequest.setRetryPolicy(new DefaultRetryPolicy(
-                                        15000,
-                                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-                                Volley.newRequestQueue(Login.this).add(postRequest);
-                            }
-                        }
-                );
-
-                Bundle bundle = new Bundle();
-                bundle.putString("fields", "id, first_name, last_name, birthday, email, gender");
-                request.setParameters(bundle);
-                request.executeAsync();
-
-//                Toast.makeText(Login.this, "User ID: "
-//                        + loginResult.getAccessToken().getUserId()
-//                        + "\n" +
-//                        "Auth Token: "
-//                        + loginResult.getAccessToken().getToken()
-//                        + "\n" +
-//                        "Permissions: "
-//                        + loginResult.getAccessToken().getPermissions(), Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onCancel() {
-                Toast.makeText(Login.this, "Cancelado", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Toast.makeText(Login.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     @Override
@@ -289,6 +158,150 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
         Intent intentHome = new Intent(this, Home.class);
         startActivity(intentHome);
         finish();
+    }
+
+    @OnClick(R.id.login_button)
+    public void loginFB() {
+        final ProgressDialog progressDialog = ProgressDialog.show(this, "", "Espera un momento...", true);
+        // Login con Facebook
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile, email, user_birthday, user_friends"));
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
+            private ProfileTracker profileTracker;
+
+            @Override
+            public void onSuccess(final LoginResult loginResult) {
+                progressDialog.setMessage("Obteniendo usuario...");
+                if (Profile.getCurrentProfile() == null) {
+                    profileTracker = new ProfileTracker() {
+                        @Override
+                        protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                            this.stopTracking();
+                        }
+                    };
+                    profileTracker.startTracking();
+                }
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                progressDialog.setMessage("Guardando usuario...");
+
+                                Log.d("CUMPLE_PUTO", object.toString());
+
+                                Map<String, String> params = new HashMap<>();
+
+                                try {
+                                    // the POST parameters:
+                                    params.put("id_facebook", object.getString("id"));
+                                    params.put("nombre", object.getString("first_name"));
+                                    params.put("apellido", object.getString("last_name"));
+                                    params.put("sexo", (object.getString("gender").equals("female")) ? "M" : "H");
+                                    params.put("email", object.getString("email"));
+                                    params.put("fecha_nacimiento", object.getString("birthday"));
+                                    params.put("password", object.getString("id"));
+
+                                } catch (JSONException e) {
+
+                                    e.printStackTrace();
+                                    Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    progressDialog.dismiss();
+                                }
+
+                                Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        try {
+
+                                            Usuario usuario = new Gson().fromJson(response.getJSONObject("data").toString(), Usuario.class);
+                                            storeSharedPref(usuario);
+                                            Toast.makeText(getApplicationContext(), "Token: \n" + usuario.getToken(), Toast.LENGTH_LONG).show();
+
+                                            Intent i = new Intent(getApplicationContext(), Home.class);
+                                            startActivity(i);
+                                            finish();
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                            Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                };
+
+                                Response.ErrorListener errorListener = new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        try {
+                                            String responseBody = new String(error.networkResponse.data, "utf-8");
+                                            ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
+                                            ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
+
+                                            LoginManager.getInstance().logOut();
+
+                                            Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
+
+                                        } catch (UnsupportedEncodingException | NullPointerException e) {
+
+                                            e.printStackTrace();
+                                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                            progressDialog.dismiss();
+                                        }
+                                    }
+                                };
+
+                                JsonObjectRequest postRequest = new JsonObjectRequest(
+                                        Request.Method.POST,
+                                        Environment.getInstance(getApplicationContext()).getBASE_URL() + "registro/fb",
+                                        new JSONObject(params),
+                                        jsonObjectListener,
+                                        errorListener) {
+                                    @Override
+                                    public Map<String, String> getHeaders() throws AuthFailureError {
+                                        HashMap<String, String> map = new HashMap<String, String>();
+                                        map.put("Accept", Environment.ACCEPT_HEADER);
+                                        map.put("Content-Type", Environment.CONTENT_TYPE);
+                                        return map;
+                                    }
+                                };
+
+                                postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                                        15000,
+                                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                                Volley.newRequestQueue(Login.this).add(postRequest);
+                            }
+                        }
+                );
+
+                Bundle bundle = new Bundle();
+                bundle.putString("fields", "id, first_name, last_name, birthday, email, gender");
+                request.setParameters(bundle);
+                request.executeAsync();
+
+//                Toast.makeText(Login.this, "User ID: "
+//                        + loginResult.getAccessToken().getUserId()
+//                        + "\n" +
+//                        "Auth Token: "
+//                        + loginResult.getAccessToken().getToken()
+//                        + "\n" +
+//                        "Permissions: "
+//                        + loginResult.getAccessToken().getPermissions(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(Login.this, "Cancelado", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(Login.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @OnClick(R.id.textView_nueva_cuenta)

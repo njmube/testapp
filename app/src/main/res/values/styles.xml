@@ -10,8 +10,6 @@
         <item name="colorControlActivated">@color/accent</item>
         <item name="colorControlHighlight">@color/primary_light</item>
         <item name="colorButtonNormal">@color/primary</item>
-
-
     </style>
 
     <!-- Toolbar -->
@@ -35,5 +33,11 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/primary_dark</item>
         <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="MyFacebookLoginButton" parent="com_facebook_loginview_default_style">
+        <item name="android:padding">5dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>

@@ -162,12 +162,11 @@
                 android:textSize="14sp"
                 />
 
-            <com.facebook.login.widget.LoginButton
-                android:id="@+id/login_button"
+            <Button
+                style="@style/MyFacebookLoginButton"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                facebook:login_text="LOGIN"/>
+                android:text="@string/com_facebook_loginview_log_in_button_long"
+                android:id="@+id/login_button"/>
 
             <TextView
                 android:id="@+id/textView_nueva_cuenta"
