@@ -1,11 +1,5 @@
 package com.app.luis.androidapp.models;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 /**
  * Created by Luis on 20/02/2016.
  */

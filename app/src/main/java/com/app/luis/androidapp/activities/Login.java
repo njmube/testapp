@@ -13,15 +13,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.app.luis.androidapp.R;
@@ -41,7 +40,6 @@ import com.facebook.login.LoginResult;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.Transition;
 import com.google.gson.Gson;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,15 +48,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnTextChanged;
-
 public class Login extends AppCompatActivity implements KenBurnsView.TransitionListener {
 
-    private static final int NUEVA_CUENTA = 0;
-    private static final int TRANSITIONS_TO_SWITCH = 3;
     @Bind(R.id.viewSwitcher)
     ViewSwitcher mViewSwitcher;
     @Bind(R.id.bg_login)
@@ -72,6 +63,8 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
     @Bind(R.id.button_entrar)
     Button button_entrar;
 
+    private static final int NUEVA_CUENTA = 0;
+    private static final int TRANSITIONS_TO_SWITCH = 3;
     private CallbackManager callbackManager;
     private int mTransitionsCount = 0;
 
@@ -215,8 +208,6 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
                                             PerfilActivo.getInstance().updateInfo(getApplicationContext());
 
                                             progressDialog.dismiss();
-
-                                            Toast.makeText(getApplicationContext(), "Token: \n" + usuario.getToken(), Toast.LENGTH_LONG).show();
 
                                             Intent i = new Intent(getApplicationContext(), Home.class);
                                             startActivity(i);

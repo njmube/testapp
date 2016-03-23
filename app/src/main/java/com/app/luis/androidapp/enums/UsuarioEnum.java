@@ -4,6 +4,7 @@ package com.app.luis.androidapp.enums;
  * Created by Luis on 06/03/2016.
  */
 public enum UsuarioEnum {
+
     TOKEN("token"),
     ID("id"),
     ID_FACEBOOK("id_facebook"),

@@ -2,13 +2,8 @@ package com.app.luis.androidapp.models;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import com.app.luis.androidapp.enums.UsuarioEnum;
 import com.app.luis.androidapp.utils.AppConstants;
-import com.app.luis.androidapp.utils.Utils;
-
-import java.text.ParseException;
-import java.util.Date;
 
 /**
  * Created by Luis Macias on 23/03/2016.

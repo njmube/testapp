@@ -69,7 +69,6 @@ public class NuevaCuenta extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_nueva_cuenta);
         ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

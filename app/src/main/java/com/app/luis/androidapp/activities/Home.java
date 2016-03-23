@@ -1,13 +1,10 @@
 package com.app.luis.androidapp.activities;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -18,8 +15,6 @@ import com.app.luis.androidapp.models.Usuario;
 import com.app.luis.androidapp.utils.Utils;
 import com.astuetz.PagerSlidingTabStrip;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
-import java.text.ParseException;
 
 public class Home extends AppCompatActivity {
 

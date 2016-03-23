@@ -3,7 +3,6 @@ package com.app.luis.androidapp.fragments;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 
 /**
  * Created by Luis Macias on 15/10/2015.

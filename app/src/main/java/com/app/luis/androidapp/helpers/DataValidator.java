@@ -2,7 +2,6 @@ package com.app.luis.androidapp.helpers;
 
 import android.util.Patterns;
 
-
 /**
  * Created by Luis on 13/10/2015.
  */
