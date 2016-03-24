@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ import com.app.luis.androidapp.helpers.Utils;
 import com.app.luis.androidapp.models.PerfilActivo;
 import com.app.luis.androidapp.models.Usuario;
 import com.app.luis.androidapp.utils.AppConstants;
+import com.app.luis.androidapp.utils.Dialogs;
 import com.app.luis.androidapp.utils.Environment;
 import com.facebook.*;
 import com.facebook.appevents.AppEventsLogger;
@@ -136,12 +138,77 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
 
     @OnClick(R.id.button_entrar)
     public void entrarLogin() {
-        String email = this.editTextEmail.getText().toString();
-        String password = this.editTextPassword.getText().toString();
 
-        Intent intentHome = new Intent(this, Home.class);
-        startActivity(intentHome);
-        finish();
+        final ProgressDialog progressDialog = ProgressDialog.show(this, "", "Espera un momento...", true);
+
+        Map<String, String> params = new HashMap<>();
+        // the POST parameters:
+        params.put("email", this.editTextEmail.getText().toString());
+        params.put("password", this.editTextPassword.getText().toString());
+
+        Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Usuario usuario = new Gson().fromJson(response.getJSONObject("data").toString(), Usuario.class);
+
+                    PerfilActivo.getInstance().setUsuario(usuario);
+                    PerfilActivo.getInstance().updateInfo(getApplicationContext());
+
+                    progressDialog.dismiss();
+
+                    Intent intentHome = new Intent(getApplicationContext(), Home.class);
+                    startActivity(intentHome);
+                    finish();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
+                }
+            }
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try {
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
+                    ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
+
+                    progressDialog.dismiss();
+
+                    Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
+                } catch (UnsupportedEncodingException | NullPointerException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
+                }
+            }
+        };
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                Environment.getInstance(getApplicationContext()).getBASE_URL() + "auth",
+                new JSONObject(params),
+                jsonObjectListener,
+                errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("Accept", Environment.ACCEPT_HEADER);
+                map.put("Content-Type", Environment.CONTENT_TYPE);
+                return map;
+            }
+        };
+
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                15000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        Volley.newRequestQueue(Login.this).add(postRequest);
     }
 
     @OnClick(R.id.login_button)
@@ -177,25 +244,36 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
 
+                                Log.d("OBJECT_RESPOSNE", object.toString());
+
                                 progressDialog.setMessage("Guardando datos...");
 
                                 Map<String, String> params = new HashMap<>();
 
                                 try {
+
+                                    String gender = "";
+                                    if (object.has("gender")) {
+                                        gender = (object.getString("gender").equals("female")) ? "M" : "H";
+                                    } else {
+                                        gender = "H";
+                                    }
                                     // the POST parameters:
                                     params.put("id_facebook", object.getString("id"));
-                                    params.put("nombre", object.getString("first_name"));
-                                    params.put("apellido", object.getString("last_name"));
-                                    params.put("sexo", (object.getString("gender").equals("female")) ? "M" : "H");
+                                    params.put("nombre", (object.has("first_name")) ? object.getString("first_name") : object.getString("name"));
+                                    params.put("apellido", (object.has("last_name")) ? object.getString("last_name") : "");
+                                    params.put("sexo", gender);
                                     params.put("email", object.getString("email"));
-                                    params.put("fecha_nacimiento", object.getString("birthday"));
+                                    params.put("fecha_nacimiento", (object.has("birthday")) ? object.getString("birthday") : null);
                                     params.put("password", object.getString("id"));
 
+                                    Log.d("ENVIO", params.toString());
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
 
                                     progressDialog.dismiss();
+                                    LoginManager.getInstance().logOut();
                                 }
 
                                 Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
@@ -203,7 +281,6 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
                                     public void onResponse(JSONObject response) {
                                         try {
                                             Usuario usuario = new Gson().fromJson(response.getJSONObject("data").toString(), Usuario.class);
-
                                             PerfilActivo.getInstance().setUsuario(usuario);
                                             PerfilActivo.getInstance().updateInfo(getApplicationContext());
 
@@ -218,6 +295,7 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
                                             e.printStackTrace();
                                             Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
                                             progressDialog.dismiss();
+                                            LoginManager.getInstance().logOut();
                                         }
                                     }
                                 };
@@ -234,12 +312,12 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
                                             progressDialog.dismiss();
 
                                             Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
-
                                         } catch (UnsupportedEncodingException | NullPointerException e) {
 
                                             e.printStackTrace();
                                             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                                             progressDialog.dismiss();
+                                            LoginManager.getInstance().logOut();
                                         }
                                     }
                                 };

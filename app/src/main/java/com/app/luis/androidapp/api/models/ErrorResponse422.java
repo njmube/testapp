@@ -3,7 +3,7 @@ package com.app.luis.androidapp.api.models;
 /**
  * Created by Luis on 05/03/2016.
  */
-public class ErrorResponse442 extends ErrorResponse {
+public class ErrorResponse422 extends ErrorResponse {
 
     private Errors errors;
 
