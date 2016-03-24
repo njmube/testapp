@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.app.luis.androidapp"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.app.luis.androidapp">
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme">
 
         <!-- Login -->
         <activity
-            android:name=".activities.Login"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait">
+                android:name=".activities.Login"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -26,31 +26,38 @@
 
         <!-- Facebook -->
         <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name">
+                android:name="com.facebook.FacebookActivity"
+                android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+                android:label="@string/app_name">
         </activity>
 
         <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+                android:name="com.facebook.sdk.ApplicationId"
+                android:value="@string/facebook_app_id"/>
 
         <!-- Nueva Cuenta -->
         <activity
-            android:name=".activities.NuevaCuenta"
-            android:label="@string/ACB_TITULO_NUEVA_CUENTA"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".activities.Login">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activities.Login"/>
+                android:name=".activities.NuevaCuenta"
+                android:label="@string/ACB_TITULO_NUEVA_CUENTA"
+                android:parentActivityName=".activities.Login"
+                android:screenOrientation="portrait">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".activities.Login"/>
         </activity>
 
         <!-- Home -->
         <activity android:name=".activities.Home"/>
-        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <!--
+             ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version"/>
+
+        <activity android:name=".activities.FSActivity">
+        </activity>
     </application>
 
 </manifest>
