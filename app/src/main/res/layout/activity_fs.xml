@@ -16,15 +16,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                app:cp_addIcon="@android:drawable/ic_menu_add"
-                app:cp_cancelIcon="@android:drawable/ic_menu_close_clear_cancel"
-                app:cp_itemBackgroundNormal="@color/blue"
-                app:cp_itemBackgroundPressed="@color/red"
-                app:cp_itemMargin="5dp"
-                app:cp_textPaddingBottom="5dp"
+                app:cp_addIcon="@drawable/ic_add_white_18dp"
+                app:cp_cancelIcon="@drawable/ic_clear_white_18dp"
+                app:cp_itemBackgroundNormal="@color/primary"
+                app:cp_itemBackgroundPressed="@color/primary_light"
+                app:cp_itemMargin="6dp"
+                app:cp_itemRadius="15dp"
+                app:cp_textPaddingBottom="7dp"
                 app:cp_textPaddingLeft="10dp"
-                app:cp_textPaddingRight="10dp"
-                app:cp_textPaddingTop="5dp"
+                app:cp_textPaddingRight="5dp"
+                app:cp_textPaddingTop="7dp"
                 app:cp_simplified="false"/>
     </ScrollView>
 
@@ -40,6 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Obtener seleccionados"
-            android:id="@+id/buttonSelected" android:layout_gravity="center_horizontal"/>
+            android:id="@+id/buttonSelected" android:layout_gravity="center_horizontal"
+        />
 
 </LinearLayout>

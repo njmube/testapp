@@ -14,14 +14,14 @@ public class Environment {
     public static final String CONTENT_TYPE = "application/json";
     public static final String FIREBASE_URL = "https://<proyecto>.firebaseio.com/";
     private static Environment instance;
-    private final String SSID_LOCAL = "LAB-BIO";//"Cablemas02D3";
+    private final String SSID_LOCAL = "Cablemas02D35";
     private final String BASE_URL;
 
     private Context context;
 
     private Environment(Context context) {
         this.context = context;
-        String BASE_IP = (isLocalEnviroment()) ? "http://148.202.149.18/android-api/public" : "http://54.219.134.90";
+        String BASE_IP = (isLocalEnviroment()) ? "http://192.168.0.18/android-api/public" : "http://54.219.134.90";
         BASE_URL = BASE_IP + "/api/";
     }
 

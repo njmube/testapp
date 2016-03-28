@@ -6,6 +6,6 @@ package com.app.luis.androidapp.api.models;
 public class ErrorResponse405 extends ErrorResponse {
     @Override
     public String getUserMessage() {
-        return getMessage();
+        return (getMessage() == null) ? getError() : getMessage();
     }
 }

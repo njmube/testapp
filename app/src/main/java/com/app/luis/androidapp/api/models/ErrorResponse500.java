@@ -9,7 +9,7 @@ public class ErrorResponse500 extends ErrorResponse {
 
     @Override
     public String getUserMessage() {
-        return getMessage();
+        return (getMessage() == null) ? getError() : getMessage();
     }
 
     public int getCode() {

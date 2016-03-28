@@ -6,6 +6,7 @@ package com.app.luis.androidapp.api.models;
 abstract public class ErrorResponse {
 
     private String message;
+    private String error;
     private int status_code;
 
     public String getMessage() {
@@ -14,6 +15,14 @@ abstract public class ErrorResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public int getStatus_code() {

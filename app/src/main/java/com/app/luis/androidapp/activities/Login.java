@@ -14,14 +14,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnTextChanged;
+
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.android.volley.*;
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.app.luis.androidapp.R;
@@ -33,15 +34,22 @@ import com.app.luis.androidapp.helpers.Utils;
 import com.app.luis.androidapp.models.PerfilActivo;
 import com.app.luis.androidapp.models.Usuario;
 import com.app.luis.androidapp.utils.AppConstants;
-import com.app.luis.androidapp.utils.Dialogs;
 import com.app.luis.androidapp.utils.Environment;
-import com.facebook.*;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.Transition;
 import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,6 +57,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnTextChanged;
 
 public class Login extends AppCompatActivity implements KenBurnsView.TransitionListener {
 
@@ -266,8 +279,6 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
                                     params.put("email", object.getString("email"));
                                     params.put("fecha_nacimiento", (object.has("birthday")) ? object.getString("birthday") : null);
                                     params.put("password", object.getString("id"));
-
-                                    Log.d("ENVIO", params.toString());
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
