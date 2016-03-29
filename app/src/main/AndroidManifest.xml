@@ -58,6 +58,8 @@
 
         <activity android:name=".activities.FSActivity">
         </activity>
+        <activity android:name=".activities.TagsInit">
+        </activity>
     </application>
 
 </manifest>

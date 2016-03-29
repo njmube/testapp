@@ -91,7 +91,7 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
         String token = preferences.getString(UsuarioEnum.TOKEN.getValue(), "");
 
         if (!TextUtils.isEmpty(token)) {
-            Intent i = new Intent(getApplicationContext(), FSActivity.class);
+            Intent i = new Intent(getApplicationContext(), TagsInit.class);
             startActivity(i);
             finish();
         } else {

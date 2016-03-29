@@ -26,4 +26,8 @@
     <string name="ACB_TITULO_NUEVA_CUENTA">Nueva cuenta</string>
     <string name="HINT_FECHA_NACIMIENTO">Fecha de nacimiento</string>
     <string name="HINT_GENERO">Género</string>
+    <string name="TV_MENSAJE_TAGS_INICIO">Selecciona algunos de tus intereses y gustos favoritos para hacerte
+        recomendaciones más
+        personalizadas.
+    </string>
 </resources>
