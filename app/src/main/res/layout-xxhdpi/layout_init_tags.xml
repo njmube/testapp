@@ -21,10 +21,10 @@
             android:textAlignment="center"
             android:textSize="18sp"
             android:textColor="@color/white"
-            fontPath="fonts/Roboto-Light.ttf"/>
+            fontPath="fonts/RobotoCondensed-Regular.ttf"/>
     <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="300dp"
             android:id="@+id/scrollView2"
             android:layout_below="@+id/tvMensajeTagsInicio"
             android:layout_centerHorizontal="true"
@@ -36,7 +36,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 app:cp_addIcon="@drawable/ic_add_white_18dp"
-                app:cp_cancelIcon="@drawable/ic_clear_white_18dp"
+                app:cp_cancelIcon="@drawable/ic_done_white_18dp"
                 app:cp_itemBackgroundNormal="@color/primary"
                 app:cp_itemBackgroundPressed="@color/primary_light"
                 app:cp_itemMargin="6dp"
@@ -48,4 +48,30 @@
                 app:cp_simplified="false"/>
 
     </ScrollView>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scrollView2"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp">
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/BTN_TAGS_INIT_CONTINUAR"
+            android:id="@+id/button"
+            android:layout_weight="1"/>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/BTN_TAGS_INIT_OMITIR"
+            android:id="@+id/button2"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
 </RelativeLayout>

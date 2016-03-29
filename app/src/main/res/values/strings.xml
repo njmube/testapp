@@ -30,4 +30,6 @@
         recomendaciones más
         personalizadas.
     </string>
+    <string name="BTN_TAGS_INIT_CONTINUAR">Continuar</string>
+    <string name="BTN_TAGS_INIT_OMITIR">Omitir</string>
 </resources>

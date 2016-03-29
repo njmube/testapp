@@ -124,7 +124,7 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == NUEVA_CUENTA) {
             if (resultCode == RESULT_OK) {
-                Intent i = new Intent(getApplicationContext(), Home.class);
+                Intent i = new Intent(getApplicationContext(), TagsInit.class);
                 startActivity(i);
                 finish();
             }
@@ -170,7 +170,7 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
 
                     progressDialog.dismiss();
 
-                    Intent intentHome = new Intent(getApplicationContext(), Home.class);
+                    Intent intentHome = new Intent(getApplicationContext(), TagsInit.class);
                     startActivity(intentHome);
                     finish();
 
