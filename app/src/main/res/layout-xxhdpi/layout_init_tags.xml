@@ -4,7 +4,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/primary_dark"
+                android:background="@drawable/bg_tagsinit"
                 tools:context="com.app.luis.androidapp.TagsInit"
                 tools:ignore="MissingPrefix">
 
@@ -15,12 +15,12 @@
             android:id="@+id/tvMensajeTagsInicio"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="40dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:textAlignment="center"
             android:textSize="18sp"
-            android:textColor="@color/white"
+            android:textColor="@color/primary_dark"
             fontPath="fonts/RobotoCondensed-Regular.ttf"/>
     <ScrollView
             android:layout_width="match_parent"
