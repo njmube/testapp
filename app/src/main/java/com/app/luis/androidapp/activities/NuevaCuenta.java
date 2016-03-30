@@ -1,9 +1,7 @@
 package com.app.luis.androidapp.activities;
 
-import android.content.Context;
-import android.content.DialogInterface;
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -34,7 +32,6 @@ import com.google.gson.Gson;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
@@ -43,6 +40,7 @@ import java.util.Map;
 
 public class NuevaCuenta extends AbstractActivity {
 
+    private final String[] generos = new String[]{"Hombre", "Mujer"};
     @Bind(R.id.toolbar_actionbar)
     Toolbar toolbar;
     @Bind(R.id.edit_text_nombre)
@@ -59,10 +57,9 @@ public class NuevaCuenta extends AbstractActivity {
     EditText editTextPassword;
     @Bind(R.id.edit_text_confirm_password)
     EditText editTextConfirmPassword;
-
+    private ProgressDialog progressDialog;
     private Thread mThread;
     private int genero = -1;
-    private final String[] generos = new String[]{"Hombre", "Mujer"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,96 +82,74 @@ public class NuevaCuenta extends AbstractActivity {
         switch (item.getItemId()) {
             case R.id.menu_done_action:
                 if (emptyFields()) {
-                    new MaterialDialog.Builder(this)
-                            .content("Espera un momento...")
-                            .progress(true, 0)
-                            .progressIndeterminateStyle(false)
-                            .cancelable(false)
-                            .widgetColorRes(R.color.primary)
-                            .theme(Theme.LIGHT)
-                            .showListener(new DialogInterface.OnShowListener() {
-                                @Override
-                                public void onShow(final DialogInterface dialog) {
-                                    final MaterialDialog materialDialog = (MaterialDialog) dialog;
 
-                                    startThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Map<String, String> params = new HashMap<>();
-                                            // the POST parameters:
-                                            params.put("nombre", editTextNombre.getText().toString());
-                                            params.put("apellido", editTextApellido.getText().toString());
-                                            params.put("sexo", editTextGenero.getText().toString().charAt(0) + "");
-                                            params.put("email", editTextEmail.getText().toString());
-                                            params.put("fecha_nacimiento", editTextFechaNacimiento.getText().toString());
-                                            params.put("password", editTextPassword.getText().toString());
+                    progressDialog = ProgressDialog.show(NuevaCuenta.this, "", "Espera un momento...", true);
 
-                                            Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
-                                                @Override
-                                                public void onResponse(JSONObject response) {
-                                                    try {
-                                                        Usuario usuario = new Gson().fromJson(response.getJSONObject("data").toString(), Usuario.class);
-                                                        PerfilActivo.getInstance().setUsuario(usuario);
-                                                        PerfilActivo.getInstance().updateInfo(getApplicationContext());
-                                                        setResult(RESULT_OK);
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                        Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                                        setResult(RESULT_CANCELED);
-                                                    } finally {
-                                                        materialDialog.cancel();
-                                                        mThread.interrupt();
-                                                        mThread = null;
-                                                        finish();
-                                                    }
-                                                }
-                                            };
+                    Map<String, String> params = new HashMap<>();
+                    // the POST parameters:
+                    params.put("nombre", editTextNombre.getText().toString());
+                    params.put("apellido", editTextApellido.getText().toString());
+                    params.put("sexo", editTextGenero.getText().toString().charAt(0) + "");
+                    params.put("email", editTextEmail.getText().toString());
+                    params.put("fecha_nacimiento", editTextFechaNacimiento.getText().toString());
+                    params.put("password", editTextPassword.getText().toString());
 
-                                            Response.ErrorListener errorListener = new Response.ErrorListener() {
-                                                @Override
-                                                public void onErrorResponse(VolleyError error) {
-                                                    try {
-                                                        String responseBody = new String(error.networkResponse.data, "utf-8");
-                                                        ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
-                                                        ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
+                    Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                Usuario usuario = new Gson().fromJson(response.getJSONObject("data").toString(), Usuario.class);
+                                PerfilActivo.getInstance().setUsuario(usuario);
+                                PerfilActivo.getInstance().updateInfo(getApplicationContext());
+                                setResult(RESULT_OK);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                setResult(RESULT_CANCELED);
+                            } finally {
+                                finish();
+                            }
+                        }
+                    };
 
-                                                        Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
-                                                    } catch (UnsupportedEncodingException e) {
-                                                        e.printStackTrace();
-                                                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                                                    } finally {
-                                                        materialDialog.cancel();
-                                                        mThread.interrupt();
-                                                        mThread = null;
-                                                    }
-                                                }
-                                            };
+                    Response.ErrorListener errorListener = new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
+                                ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
+                                Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                            } finally {
+                                progressDialog.dismiss();
+                            }
+                        }
+                    };
 
-                                            JsonObjectRequest postRequest = new JsonObjectRequest(
-                                                    Request.Method.POST,
-                                                    Environment.getInstance(getApplicationContext()).getBASE_URL() + "registro",
-                                                    new JSONObject(params),
-                                                    jsonObjectListener,
-                                                    errorListener) {
-                                                @Override
-                                                public Map<String, String> getHeaders() throws AuthFailureError {
-                                                    HashMap<String, String> map = new HashMap<String, String>();
-                                                    map.put("Accept", Environment.ACCEPT_HEADER);
-                                                    map.put("Content-Type", Environment.CONTENT_TYPE);
-                                                    return map;
-                                                }
-                                            };
+                    JsonObjectRequest postRequest = new JsonObjectRequest(
+                            Request.Method.POST,
+                            Environment.getInstance(getApplicationContext()).getBASE_URL() + "registro",
+                            new JSONObject(params),
+                            jsonObjectListener,
+                            errorListener) {
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            HashMap<String, String> map = new HashMap<String, String>();
+                            map.put("Accept", Environment.ACCEPT_HEADER);
+                            map.put("Content-Type", Environment.CONTENT_TYPE);
+                            return map;
+                        }
+                    };
 
-                                            postRequest.setRetryPolicy(new DefaultRetryPolicy(
-                                                    15000,
-                                                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                                                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                    postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                            15000,
+                            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-                                            Volley.newRequestQueue(NuevaCuenta.this).add(postRequest);
-                                        }
-                                    });
-                                }
-                            }).show();
+                    Volley.newRequestQueue(NuevaCuenta.this).add(postRequest);
                 }
                 break;
 

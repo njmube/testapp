@@ -2,7 +2,6 @@ package com.app.luis.androidapp.models;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.app.luis.androidapp.enums.UsuarioEnum;
 import com.app.luis.androidapp.utils.AppConstants;
 
 /**
@@ -32,29 +31,29 @@ public class PerfilActivo {
         if (usuario != null) {
             SharedPreferences preferences = context.getSharedPreferences(AppConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(UsuarioEnum.TOKEN.getValue(), usuario.getToken());
-            editor.putString(UsuarioEnum.ID.getValue(), usuario.getId());
-            editor.putString(UsuarioEnum.ID_FACEBOOK.getValue(), usuario.getId_facebook());
-            editor.putString(UsuarioEnum.NOMBRE.getValue(), usuario.getNombre());
-            editor.putString(UsuarioEnum.APELLIDO.getValue(), usuario.getApellido());
-            editor.putString(UsuarioEnum.FECHA_NACIMIENTO.getValue(), usuario.getFecha_nacimiento().toString());
-            editor.putString(UsuarioEnum.EMAIL.getValue(), usuario.getEmail());
-            editor.putString(UsuarioEnum.SEXO.getValue(), usuario.getSexo() + "");
+            editor.putString(Usuario.UserAttributes.TOKEN, usuario.getToken());
+            editor.putString(Usuario.UserAttributes.ID, usuario.getId());
+            editor.putString(Usuario.UserAttributes.ID_FACEBOOK, usuario.getId_facebook());
+            editor.putString(Usuario.UserAttributes.NOMBRE, usuario.getNombre());
+            editor.putString(Usuario.UserAttributes.APELLIDO, usuario.getApellido());
+            editor.putString(Usuario.UserAttributes.FECHA_NACIMIENTO, usuario.getFecha_nacimiento());
+            editor.putString(Usuario.UserAttributes.EMAIL, usuario.getEmail());
+            editor.putString(Usuario.UserAttributes.SEXO, usuario.getSexo() + "");
             editor.commit();
         }
     }
 
     public Usuario getFromSharedPreferences(Context context) {
 
-        SharedPreferences shared = context.getSharedPreferences(AppConstants.USER_PREFERENCES, context.MODE_PRIVATE);
-        String token = shared.getString(UsuarioEnum.TOKEN.getValue(), null);
-        String id = shared.getString(UsuarioEnum.ID.getValue(), null);
-        String id_facebook = shared.getString(UsuarioEnum.ID_FACEBOOK.getValue(), null);
-        String nombre = shared.getString(UsuarioEnum.NOMBRE.getValue(), null);
-        String apellido = shared.getString(UsuarioEnum.APELLIDO.getValue(), null);
-        String fecha_nacimiento = shared.getString(UsuarioEnum.FECHA_NACIMIENTO.getValue(), null);
-        String email = shared.getString(UsuarioEnum.EMAIL.getValue(), null);
-        String sexo = shared.getString(UsuarioEnum.SEXO.getValue(), null);
+        SharedPreferences shared = context.getSharedPreferences(AppConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
+        String token = shared.getString(Usuario.UserAttributes.TOKEN, null);
+        String id = shared.getString(Usuario.UserAttributes.ID, null);
+        String id_facebook = shared.getString(Usuario.UserAttributes.ID_FACEBOOK, null);
+        String nombre = shared.getString(Usuario.UserAttributes.NOMBRE, null);
+        String apellido = shared.getString(Usuario.UserAttributes.APELLIDO, null);
+        String fecha_nacimiento = shared.getString(Usuario.UserAttributes.FECHA_NACIMIENTO, null);
+        String email = shared.getString(Usuario.UserAttributes.EMAIL, null);
+        String sexo = shared.getString(Usuario.UserAttributes.SEXO, null);
 
         usuario = new Usuario();
         usuario.setToken(token);

@@ -5,4 +5,5 @@ package com.app.luis.androidapp.utils;
  */
 public class AppConstants {
     public static final String USER_PREFERENCES = "UserData";
+    public static final String USER_TAGS_PREFERENCES = "UserTagsData";
 }

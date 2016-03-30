@@ -95,4 +95,19 @@ public class Usuario {
                 ", sexo=" + sexo +
                 '}';
     }
+
+    public static class UserAttributes {
+        public static final String TOKEN = "token";
+        public static final String ID = "id";
+        public static final String ID_FACEBOOK = "id_facebook";
+        public static final String NOMBRE = "nombre";
+        public static final String APELLIDO = "apellido";
+        public static final String FECHA_NACIMIENTO = "fecha_nacimiento";
+        public static final String EMAIL = "email";
+        public static final String SEXO = "sexo";
+    }
+
+    public static class UserTagAttribute {
+        public static final String TAG = "tag";
+    }
 }

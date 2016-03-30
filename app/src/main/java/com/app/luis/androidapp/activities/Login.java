@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,42 +13,32 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.app.luis.androidapp.R;
 import com.app.luis.androidapp.api.factory.FactoryResponse;
 import com.app.luis.androidapp.api.models.ErrorResponse;
-import com.app.luis.androidapp.enums.UsuarioEnum;
 import com.app.luis.androidapp.helpers.DataValidator;
 import com.app.luis.androidapp.helpers.Utils;
 import com.app.luis.androidapp.models.PerfilActivo;
 import com.app.luis.androidapp.models.Usuario;
 import com.app.luis.androidapp.utils.AppConstants;
 import com.app.luis.androidapp.utils.Environment;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
+import com.facebook.*;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.Transition;
 import com.google.gson.Gson;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,20 +47,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnTextChanged;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
 public class Login extends AbstractActivity implements KenBurnsView.TransitionListener {
 
     private static final int NUEVA_CUENTA = 0;
     private static final int TRANSITIONS_TO_SWITCH = 2;
-    private CallbackManager callbackManager;
-    private int mTransitionsCount = 0;
-
     @Bind(R.id.viewSwitcher)
     ViewSwitcher mViewSwitcher;
     @Bind(R.id.bg_login)
@@ -84,16 +63,18 @@ public class Login extends AbstractActivity implements KenBurnsView.TransitionLi
     EditText editTextPassword;
     @Bind(R.id.button_entrar)
     Button button_entrar;
+    private CallbackManager callbackManager;
+    private int mTransitionsCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         SharedPreferences preferences = getSharedPreferences(AppConstants.USER_PREFERENCES, Context.MODE_PRIVATE);
-        String token = preferences.getString(UsuarioEnum.TOKEN.getValue(), "");
+        String token = preferences.getString(Usuario.UserAttributes.TOKEN, "");
 
         if (!TextUtils.isEmpty(token)) {
-            startActivity(new Intent(Login.this, TagsInit.class));
+            startActivity(new Intent(Login.this, Home.class));
             finish();
         } else {
             FacebookSdk.sdkInitialize(getApplicationContext());
@@ -136,7 +117,8 @@ public class Login extends AbstractActivity implements KenBurnsView.TransitionLi
 
     // KenBurnsView de fondo
     @Override
-    public void onTransitionStart(Transition transition) {}
+    public void onTransitionStart(Transition transition) {
+    }
 
     // KenBurnsView de fondo
     @Override

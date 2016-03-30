@@ -1,9 +1,7 @@
 package com.app.luis.androidapp.activities;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -14,7 +12,6 @@ import com.app.luis.androidapp.models.PerfilActivo;
 import com.app.luis.androidapp.models.Usuario;
 import com.app.luis.androidapp.utils.Utils;
 import com.astuetz.PagerSlidingTabStrip;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class Home extends AbstractActivity {
 

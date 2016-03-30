@@ -1,6 +1,9 @@
 package com.app.luis.androidapp.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -18,6 +21,7 @@ import com.app.luis.androidapp.api.factory.FactoryResponse;
 import com.app.luis.androidapp.api.models.ErrorResponse;
 import com.app.luis.androidapp.models.PerfilActivo;
 import com.app.luis.androidapp.models.Usuario;
+import com.app.luis.androidapp.utils.AppConstants;
 import com.app.luis.androidapp.utils.Environment;
 import com.google.gson.Gson;
 import org.json.JSONArray;
@@ -70,15 +74,21 @@ public class TagsInit extends AbstractActivity {
 
     @OnClick(R.id.btnContinuar)
     public void continuar() {
-        Toast.makeText(TagsInit.this, "Total de seleccionados: " + mPicker.getCheckedItems().size(), Toast.LENGTH_LONG).show();
-
         HashMap<String, Object> seleccionados = mPicker.getCheckedItems();
-        Iterator<Map.Entry<String, Object>> iterator = seleccionados.entrySet().iterator();
 
+        SharedPreferences preferences = getApplicationContext()
+                .getSharedPreferences(AppConstants.USER_TAGS_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        Set<String> set = new HashSet<>();
         for (Map.Entry<String, Object> entry : seleccionados.entrySet()) {
-            String key = entry.getKey();
             String value = ((Item) entry.getValue()).text;
-            Log.d("TAGS_SELECCIONADOS", key + " - " + value);
+            set.add(value);
+        }
+        editor.putStringSet(Usuario.UserTagAttribute.TAG, set);
+        if (editor.commit()) {
+            startActivity(new Intent(TagsInit.this, Home.class));
+            finish();
         }
     }
 
