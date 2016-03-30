@@ -16,7 +16,7 @@ import com.app.luis.androidapp.utils.Utils;
 import com.astuetz.PagerSlidingTabStrip;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class Home extends AppCompatActivity {
+public class Home extends AbstractActivity {
 
     @Bind(R.id.toolbar_actionbar)
     Toolbar toolbar;
@@ -44,10 +44,5 @@ public class Home extends AppCompatActivity {
         usuarioActivo = PerfilActivo.getInstance().getFromSharedPreferences(getApplicationContext());
 
         Toast.makeText(this, "Bienvenido " + usuarioActivo.getNombreCompleto(), Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

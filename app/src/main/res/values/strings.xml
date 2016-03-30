@@ -22,13 +22,11 @@
     <string name="BUTTON_CANCELAR">Cancelar</string>
     <string name="BUTTON_ACEPTAR">Aceptar</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="ACB_TITULO_NUEVA_CUENTA">Nueva cuenta</string>
     <string name="HINT_FECHA_NACIMIENTO">Fecha de nacimiento</string>
     <string name="HINT_GENERO">Género</string>
-    <string name="TV_MENSAJE_TAGS_INICIO">Selecciona algunos de tus intereses y gustos favoritos para hacerte
-        recomendaciones más
-        personalizadas.
+    <string name="TV_MENSAJE_TAGS_INICIO">Hola %1$s, elige algunos de tus intereses y gustos favoritos para hacerte
+        mejores recomendaciones.
     </string>
     <string name="BTN_TAGS_INIT_CONTINUAR">Continuar</string>
     <string name="BTN_TAGS_INIT_MAS">Más tags</string>

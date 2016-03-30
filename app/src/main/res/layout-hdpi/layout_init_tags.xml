@@ -17,7 +17,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:gravity="center"
             android:shadowColor="@color/primary"
             android:shadowDx="0"
@@ -33,7 +33,7 @@
             android:layout_height="300dp"
             android:layout_below="@+id/tvMensajeTagsInicio"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp">
+            android:layout_marginTop="30dp">
 
         <com.anton46.collectionitempicker.CollectionPicker
                 android:id="@+id/tags_item_picker"
@@ -60,7 +60,7 @@
             android:orientation="horizontal"
             android:padding="10dp"
             android:layout_below="@+id/scrollView2" android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp">
+            android:layout_marginTop="0dp">
 
         <Button
                 android:id="@+id/btnMasTags"

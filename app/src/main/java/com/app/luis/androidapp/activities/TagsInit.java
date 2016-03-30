@@ -1,17 +1,14 @@
 package com.app.luis.androidapp.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.anton46.collectionitempicker.CollectionPicker;
@@ -23,33 +20,24 @@ import com.app.luis.androidapp.models.PerfilActivo;
 import com.app.luis.androidapp.models.Usuario;
 import com.app.luis.androidapp.utils.Environment;
 import com.google.gson.Gson;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+public class TagsInit extends AbstractActivity {
 
-public class TagsInit extends AppCompatActivity {
 
-    private final int incrementList = 10;
-    private int contador = 1;
+    private final int incrementList = 15;
     @Bind(R.id.tags_item_picker)
     CollectionPicker mPicker;
+    @Bind(R.id.tvMensajeTagsInicio)
+    TextView mensajeTagInicio;
+    private int contador = 1;
     private Usuario usuario;
     private List<Item> tags;
-    private List<Item> tagsSeleccionados = new ArrayList<>();
     private ProgressDialog progressDialog;
 
     @Override
@@ -59,11 +47,7 @@ public class TagsInit extends AppCompatActivity {
         ButterKnife.bind(this);
 
         usuario = PerfilActivo.getInstance().getFromSharedPreferences(getApplicationContext());
-
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Montserrat-Regular.otf")
-                .setFontAttrId(R.attr.fontPath)
-                .build());
+        mensajeTagInicio.setText(getString(R.string.TV_MENSAJE_TAGS_INICIO, usuario.getNombre()));
     }
 
     @Override
@@ -73,20 +57,12 @@ public class TagsInit extends AppCompatActivity {
         getTagsServer();
     }
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
     @OnClick(R.id.btnMasTags)
     public void mostrarMasTags() {
         int start = mPicker.getItems().size() * contador;
         int end = mPicker.getItems().size() * ++contador;
 
-        Log.d("SERIE", start+" - "+end);
-
         if (tags.size() > end) {
-            //mPicker.removeAllViews();
             mPicker.setItems(tags.subList(start, end));
             mPicker.drawItemView();
         }
@@ -95,6 +71,15 @@ public class TagsInit extends AppCompatActivity {
     @OnClick(R.id.btnContinuar)
     public void continuar() {
         Toast.makeText(TagsInit.this, "Total de seleccionados: " + mPicker.getCheckedItems().size(), Toast.LENGTH_LONG).show();
+
+        HashMap<String, Object> seleccionados = mPicker.getCheckedItems();
+        Iterator<Map.Entry<String, Object>> iterator = seleccionados.entrySet().iterator();
+
+        for (Map.Entry<String, Object> entry : seleccionados.entrySet()) {
+            String key = entry.getKey();
+            String value = ((Item) entry.getValue()).text;
+            Log.d("TAGS_SELECCIONADOS", key + " - " + value);
+        }
     }
 
     private void getTagsServer() {
@@ -113,10 +98,8 @@ public class TagsInit extends AppCompatActivity {
                     }
 
                     Collections.shuffle(tags);
-
                     mPicker.setItems(tags.subList(0, incrementList));
                     mPicker.drawItemView();
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();

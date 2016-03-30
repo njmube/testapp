@@ -41,7 +41,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NuevaCuenta extends AppCompatActivity {
+public class NuevaCuenta extends AbstractActivity {
 
     @Bind(R.id.toolbar_actionbar)
     Toolbar toolbar;
@@ -69,6 +69,7 @@ public class NuevaCuenta extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_nueva_cuenta);
         ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -184,11 +185,6 @@ public class NuevaCuenta extends AppCompatActivity {
                 break;
         }
         return true;
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @OnEditorAction(R.id.edit_text_apellido)

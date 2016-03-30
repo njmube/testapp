@@ -26,7 +26,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/bg_login2"/>
-
     </ViewSwitcher>
 
     <LinearLayout
@@ -65,7 +64,6 @@
                 android:layout_alignParentTop="true"
                 android:padding="8dp"
                 android:scaleType="centerInside"
-
                 app:iiv_color="@color/primary_light"
                 app:iiv_icon="gmd-person"/>
 
@@ -81,14 +79,13 @@
                 android:hint="@string/HINT_EMAIL"
                 android:inputType="textEmailAddress"
                 android:singleLine="true"
-                android:textSize="15sp"
-
+                android:textSize="14sp"
                 app:met_baseColor="@color/primary_light"
                 app:met_helperTextColor="@color/primary_light"
                 app:met_primaryColor="@color/accent"
                 app:met_textColor="@color/accent"
                 app:met_textColorHint="@color/primary_light"
-                app:met_typeface="fonts/Montserrat-Regular.otf"
+                app:met_typeface="fonts/Montserrat-UltraLight.otf"
                 app:met_underlineColor="@color/primary_light"/>
 
             <com.mikepenz.iconics.view.IconicsImageView
@@ -102,7 +99,6 @@
                 android:layout_below="@+id/editText_email"
                 android:padding="8dp"
                 android:scaleType="centerInside"
-
                 app:iiv_color="@color/primary_light"
                 app:iiv_icon="gmd-vpn-key"/>
 
@@ -119,19 +115,18 @@
                 android:hint="@string/HINT_PASSWORD"
                 android:inputType="textPassword"
                 android:singleLine="true"
-                android:textSize="15sp"
-
+                android:textSize="14sp"
                 app:met_baseColor="@color/primary_light"
                 app:met_helperTextColor="@color/primary_light"
                 app:met_primaryColor="@color/accent"
                 app:met_textColor="@color/accent"
                 app:met_textColorHint="@color/primary_light"
-                app:met_typeface="fonts/Montserrat-Regular.otf"
+                app:met_typeface="fonts/Montserrat-UltraLight.otf"
                 app:met_underlineColor="@color/primary_light"/>
 
             <Button
                 android:id="@+id/button_entrar"
-                fontPath="fonts/Montserrat-Bold.otf"
+                fontPath="fonts/Montserrat-SemiBold.otf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/editText_password"
@@ -163,8 +158,7 @@
                 android:text="@string/TEXT_TAMBIEN"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/icons"
-                android:textSize="14sp"
-                />
+                android:textSize="14sp"/>
 
             <Button
                 android:id="@+id/login_button"
@@ -174,7 +168,7 @@
 
             <TextView
                 android:id="@+id/textView_nueva_cuenta"
-                fontPath="fonts/Montserrat-Bold.otf"
+                fontPath="fonts/Montserrat-SemiBold.otf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -189,7 +183,7 @@
 
             <TextView
                 android:id="@+id/textView_olvida_password"
-                fontPath="fonts/Montserrat-Bold.otf"
+                fontPath="fonts/Montserrat-SemiBold.otf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
