@@ -62,9 +62,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class Login extends AppCompatActivity implements KenBurnsView.TransitionListener {
 
+    private static final int NUEVA_CUENTA = 0;
+    private static final int TRANSITIONS_TO_SWITCH = 3;
     @Bind(R.id.viewSwitcher)
     ViewSwitcher mViewSwitcher;
     @Bind(R.id.bg_login)
@@ -77,9 +81,6 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
     EditText editTextPassword;
     @Bind(R.id.button_entrar)
     Button button_entrar;
-
-    private static final int NUEVA_CUENTA = 0;
-    private static final int TRANSITIONS_TO_SWITCH = 3;
     private CallbackManager callbackManager;
     private int mTransitionsCount = 0;
 
@@ -100,11 +101,22 @@ public class Login extends AppCompatActivity implements KenBurnsView.TransitionL
             setContentView(R.layout.layout_login);
             ButterKnife.bind(this);
 
+            CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                    .setDefaultFontPath("fonts/Montserrat-Regular.otf")
+                    .setFontAttrId(R.attr.fontPath)
+                    .build());
+
             // KenBurnsView de fondo
             bgLogin.setTransitionListener(this);
             bgLogin2.setTransitionListener(this);
         }
     }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
 
     @Override
     protected void onResume() {

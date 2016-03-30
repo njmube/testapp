@@ -35,26 +35,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class TagsInit extends AppCompatActivity {
 
-    private CollectionPicker mPicker;
+    private final int incrementList = 10;
+    private int contador = 1;
+    @Bind(R.id.tags_item_picker)
+    CollectionPicker mPicker;
     private Usuario usuario;
     private List<Item> tags;
+    private List<Item> tagsSeleccionados = new ArrayList<>();
     private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_init_tags);
+        ButterKnife.bind(this);
 
         usuario = PerfilActivo.getInstance().getFromSharedPreferences(getApplicationContext());
-        mPicker = (CollectionPicker) findViewById(R.id.tags_item_picker);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Roboto-Light.ttf")
+                .setDefaultFontPath("fonts/Montserrat-Regular.otf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
     }
@@ -71,25 +78,45 @@ public class TagsInit extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
+    @OnClick(R.id.btnMasTags)
+    public void mostrarMasTags() {
+        int start = mPicker.getItems().size() * contador;
+        int end = mPicker.getItems().size() * ++contador;
+
+        Log.d("SERIE", start+" - "+end);
+
+        if (tags.size() > end) {
+            //mPicker.removeAllViews();
+            mPicker.setItems(tags.subList(start, end));
+            mPicker.drawItemView();
+        }
+    }
+
+    @OnClick(R.id.btnContinuar)
+    public void continuar() {
+        Toast.makeText(TagsInit.this, "Total de seleccionados: " + mPicker.getCheckedItems().size(), Toast.LENGTH_LONG).show();
+    }
+
     private void getTagsServer() {
 
         Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
+
                     tags = new ArrayList<>();
                     JSONArray jsonArray = response.getJSONArray("data");
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject object = jsonArray.getJSONObject(i);
-                        Log.d("LISTA_ADD", object.getString("id") + "-" + object.getString("tag"));
                         tags.add(new Item(object.getString("id"), object.getString("tag")));
                     }
 
                     Collections.shuffle(tags);
-                    mPicker.setItems(tags);
+
+                    mPicker.setItems(tags.subList(0, incrementList));
                     mPicker.drawItemView();
-                    Toast.makeText(getApplicationContext(), "Total de tags: " + tags.size() + "", Toast.LENGTH_LONG).show();
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();

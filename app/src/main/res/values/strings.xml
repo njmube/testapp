@@ -31,5 +31,5 @@
         personalizadas.
     </string>
     <string name="BTN_TAGS_INIT_CONTINUAR">Continuar</string>
-    <string name="BTN_TAGS_INIT_OMITIR">Omitir</string>
+    <string name="BTN_TAGS_INIT_MAS">Más tags</string>
 </resources>

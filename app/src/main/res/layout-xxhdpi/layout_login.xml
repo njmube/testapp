@@ -2,9 +2,11 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:facebook="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="com.app.luis.androidapp.activities.Login"
+    tools:ignore="MissingPrefix">
 
     <ViewSwitcher
         android:id="@+id/viewSwitcher"
@@ -17,13 +19,13 @@
             android:id="@+id/bg_login"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/bg_login" />
+            android:src="@drawable/bg_login"/>
 
         <com.flaviofaria.kenburnsview.KenBurnsView
             android:id="@+id/bg_login2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/bg_login2" />
+            android:src="@drawable/bg_login2"/>
 
     </ViewSwitcher>
 
@@ -79,15 +81,15 @@
                 android:hint="@string/HINT_EMAIL"
                 android:inputType="textEmailAddress"
                 android:singleLine="true"
-                android:textSize="16sp"
+                android:textSize="15sp"
 
                 app:met_baseColor="@color/primary_light"
                 app:met_helperTextColor="@color/primary_light"
                 app:met_primaryColor="@color/accent"
                 app:met_textColor="@color/accent"
                 app:met_textColorHint="@color/primary_light"
-                app:met_underlineColor="@color/primary_light"
-                app:met_typeface="fonts/RobotoCondensed-Regular.ttf"/>
+                app:met_typeface="fonts/Montserrat-Regular.otf"
+                app:met_underlineColor="@color/primary_light"/>
 
             <com.mikepenz.iconics.view.IconicsImageView
                 android:id="@+id/icon_password"
@@ -117,27 +119,28 @@
                 android:hint="@string/HINT_PASSWORD"
                 android:inputType="textPassword"
                 android:singleLine="true"
-                android:textSize="16sp"
+                android:textSize="15sp"
 
                 app:met_baseColor="@color/primary_light"
                 app:met_helperTextColor="@color/primary_light"
                 app:met_primaryColor="@color/accent"
                 app:met_textColor="@color/accent"
                 app:met_textColorHint="@color/primary_light"
-                app:met_underlineColor="@color/primary_light"
-                app:met_typeface="fonts/RobotoCondensed-Regular.ttf"/>
+                app:met_typeface="fonts/Montserrat-Regular.otf"
+                app:met_underlineColor="@color/primary_light"/>
 
             <Button
                 android:id="@+id/button_entrar"
+                fontPath="fonts/Montserrat-Bold.otf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/editText_password"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
+                android:enabled="false"
                 android:singleLine="false"
                 android:text="@string/BUTTON_LOGIN_ENTRAR"
-                android:textColor="@color/icons"
-                android:enabled="false"/>
+                android:textColor="@color/icons"/>
         </RelativeLayout>
 
         <LinearLayout
@@ -150,6 +153,7 @@
 
             <TextView
                 android:id="@+id/textView"
+                fontPath="fonts/Montserrat-Light.otf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -163,13 +167,14 @@
                 />
 
             <Button
+                android:id="@+id/login_button"
                 style="@style/MyFacebookLoginButton"
                 android:layout_width="wrap_content"
-                android:text="@string/com_facebook_loginview_log_in_button_long"
-                android:id="@+id/login_button"/>
+                android:text="@string/com_facebook_loginview_log_in_button_long"/>
 
             <TextView
                 android:id="@+id/textView_nueva_cuenta"
+                fontPath="fonts/Montserrat-Bold.otf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -184,6 +189,7 @@
 
             <TextView
                 android:id="@+id/textView_olvida_password"
+                fontPath="fonts/Montserrat-Bold.otf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

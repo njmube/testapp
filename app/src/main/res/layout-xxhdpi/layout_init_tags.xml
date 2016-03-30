@@ -5,73 +5,81 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_tagsinit"
-                tools:context="com.app.luis.androidapp.TagsInit"
+                tools:context="com.app.luis.androidapp.activities.TagsInit"
                 tools:ignore="MissingPrefix">
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/TV_MENSAJE_TAGS_INICIO"
-            android:id="@+id/tvMensajeTagsInicio"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            android:textColor="@color/primary_dark"
-            fontPath="fonts/RobotoCondensed-Regular.ttf"/>
+        android:id="@+id/tvMensajeTagsInicio"
+        fontPath="fonts/Montserrat-SemiBold.otf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:shadowColor="@color/primary"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="3"
+        android:text="@string/TV_MENSAJE_TAGS_INICIO"
+        android:textColor="@color/primary_dark"
+        android:textSize="16sp"/>
+
     <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:id="@+id/scrollView2"
-            android:layout_below="@+id/tvMensajeTagsInicio"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp">
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@+id/tvMensajeTagsInicio"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp">
 
         <com.anton46.collectionitempicker.CollectionPicker
-                android:id="@+id/tags_item_picker"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                app:cp_addIcon="@drawable/ic_add_white_18dp"
-                app:cp_cancelIcon="@drawable/ic_done_white_18dp"
-                app:cp_itemBackgroundNormal="@color/primary"
-                app:cp_itemBackgroundPressed="@color/primary_light"
-                app:cp_itemMargin="6dp"
-                app:cp_itemRadius="15dp"
-                app:cp_textPaddingBottom="7dp"
-                app:cp_textPaddingLeft="10dp"
-                app:cp_textPaddingRight="5dp"
-                app:cp_textPaddingTop="7dp"
-                app:cp_simplified="false"/>
+            android:id="@+id/tags_item_picker"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:cp_addIcon="@drawable/ic_add_white_18dp"
+            app:cp_cancelIcon="@drawable/ic_remove_white_18dp"
+            app:cp_itemBackgroundNormal="@color/primary"
+            app:cp_itemBackgroundPressed="@color/primary_light"
+            app:cp_itemMargin="6dp"
+            app:cp_itemRadius="15dp"
+            app:cp_simplified="false"
+            app:cp_textPaddingBottom="7dp"
+            app:cp_textPaddingLeft="10dp"
+            app:cp_textPaddingRight="5dp"
+            app:cp_textPaddingTop="7dp"/>
 
     </ScrollView>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/scrollView2"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
         android:padding="10dp">
 
         <Button
+            android:id="@+id/btnMasTags"
             style="?android:attr/buttonStyleSmall"
+            fontPath="fonts/Montserrat-Bold.otf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/BTN_TAGS_INIT_CONTINUAR"
-            android:id="@+id/button"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="@string/BTN_TAGS_INIT_MAS"/>
 
         <Button
+            android:id="@+id/btnContinuar"
             style="?android:attr/buttonStyleSmall"
+            fontPath="fonts/Montserrat-Bold.otf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/BTN_TAGS_INIT_OMITIR"
-            android:id="@+id/button2"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="@string/BTN_TAGS_INIT_CONTINUAR"/>
     </LinearLayout>
 
 </RelativeLayout>
