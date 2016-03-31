@@ -108,6 +108,6 @@ public class Usuario {
     }
 
     public static class UserTagAttribute {
-        public static final String TAG = "tag";
+        public static final String TAG_JSON = "tag";
     }
 }

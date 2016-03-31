@@ -33,12 +33,11 @@ import java.util.*;
 
 public class TagsInit extends AbstractActivity {
 
+    private final int incrementList = 15;
     @Bind(R.id.tags_item_picker)
     CollectionPicker mPicker;
     @Bind(R.id.tvMensajeTagsInicio)
     TextView mensajeTagInicio;
-
-    private final int incrementList = 15;
     private int contador = 1;
     private Usuario usuario;
     private List<Item> tags;
@@ -76,20 +75,33 @@ public class TagsInit extends AbstractActivity {
     public void continuar() {
         HashMap<String, Object> seleccionados = mPicker.getCheckedItems();
 
+        Set<String> set = new HashSet<>();
+        for (Map.Entry<String, Object> entry : seleccionados.entrySet()) {
+            set.add(((Item) entry.getValue()).text);
+        }
+
         SharedPreferences preferences = getApplicationContext()
                 .getSharedPreferences(AppConstants.USER_TAGS_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
-        Set<String> set = new HashSet<>();
-        for (Map.Entry<String, Object> entry : seleccionados.entrySet()) {
-            String value = ((Item) entry.getValue()).text;
-            set.add(value);
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("data", set);
+
+            String json_tags = jsonObject.toString();
+            Log.d("JSON_TAGS", json_tags);
+
+            editor.putString(Usuario.UserTagAttribute.TAG_JSON, json_tags);
+            editor.commit();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        editor.putStringSet(Usuario.UserTagAttribute.TAG, set);
-        if (editor.commit()) {
-            startActivity(new Intent(TagsInit.this, Home.class));
-            finish();
-        }
+
+
+
+        startActivity(new Intent(TagsInit.this, Home.class));
+        finish();
+
     }
 
     private void getTagsServer() {
@@ -166,5 +178,10 @@ public class TagsInit extends AbstractActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         Volley.newRequestQueue(TagsInit.this).add(jsonObjectRequest);
+    }
+
+    private void postTags(String json_tags) {
+        Map<String, String> params = new HashMap<>();
+        params.put("tags", json_tags);
     }
 }
