@@ -33,12 +33,12 @@ import java.util.*;
 
 public class TagsInit extends AbstractActivity {
 
-
-    private final int incrementList = 15;
     @Bind(R.id.tags_item_picker)
     CollectionPicker mPicker;
     @Bind(R.id.tvMensajeTagsInicio)
     TextView mensajeTagInicio;
+
+    private final int incrementList = 15;
     private int contador = 1;
     private Usuario usuario;
     private List<Item> tags;
@@ -98,10 +98,9 @@ public class TagsInit extends AbstractActivity {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-
                     tags = new ArrayList<>();
-                    JSONArray jsonArray = response.getJSONArray("data");
 
+                    JSONArray jsonArray = response.getJSONArray("data");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject object = jsonArray.getJSONObject(i);
                         tags.add(new Item(object.getString("id"), object.getString("tag")));
@@ -110,11 +109,16 @@ public class TagsInit extends AbstractActivity {
                     Collections.shuffle(tags);
                     mPicker.setItems(tags.subList(0, incrementList));
                     mPicker.drawItemView();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
-                } finally {
+
                     progressDialog.dismiss();
+
+                } catch (JSONException | IllegalArgumentException e) {
+                    e.printStackTrace();
+                    progressDialog.dismiss();
+
+                    if (!(e instanceof IllegalArgumentException)) {
+                        Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         };
@@ -126,13 +130,17 @@ public class TagsInit extends AbstractActivity {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
                     ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
-
                     Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
-                } catch (UnsupportedEncodingException | NullPointerException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                } finally {
+
                     progressDialog.dismiss();
+
+                } catch (UnsupportedEncodingException | NullPointerException | IllegalArgumentException e) {
+                    e.printStackTrace();
+                    progressDialog.dismiss();
+
+                    if (!(e instanceof IllegalArgumentException)) {
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         };
