@@ -1,199 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:facebook="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ViewSwitcher
-        android:id="@+id/viewSwitcher"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:inAnimation="@android:anim/fade_in"
-        android:outAnimation="@android:anim/fade_out">
+        tools:context="com.app.luis.androidapp.activities.Login"
+        tools:ignore="MissingPrefix">
 
-        <com.flaviofaria.kenburnsview.KenBurnsView
-            android:id="@+id/bg_login"
+    <ViewSwitcher
+            android:id="@+id/viewSwitcher"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/bg_login" />
+            android:inAnimation="@android:anim/fade_in"
+            android:outAnimation="@android:anim/fade_out">
 
         <com.flaviofaria.kenburnsview.KenBurnsView
-            android:id="@+id/bg_login2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/bg_login2" />
+                android:id="@+id/bg_login"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/bg_login"/>
 
+        <com.flaviofaria.kenburnsview.KenBurnsView
+                android:id="@+id/bg_login2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/bg_login2"/>
     </ViewSwitcher>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/bg_tranparent"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/logo"
-            android:contentDescription="@string/app_name"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="30dp"
-            android:focusableInTouchMode="true"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp">
-
-            <com.mikepenz.iconics.view.IconicsImageView
-                android:id="@+id/icon_email"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_above="@+id/icon_password"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:padding="8dp"
-                android:scaleType="centerInside"
-
-                app:iiv_color="@color/primary_light"
-                app:iiv_icon="gmd-person"/>
-
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/editText_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@+id/icon_email"
-                android:layout_toRightOf="@+id/icon_email"
-                android:hint="@string/HINT_EMAIL"
-                android:inputType="textEmailAddress"
-                android:singleLine="true"
-                android:textSize="16sp"
-
-                app:met_baseColor="@color/primary_light"
-                app:met_helperTextColor="@color/primary_light"
-                app:met_primaryColor="@color/accent"
-                app:met_textColor="@color/accent"
-                app:met_textColorHint="@color/primary_light"
-                app:met_underlineColor="@color/primary_light"
-                app:met_typeface="fonts/RobotoCondensed-Regular.ttf"/>
-
-            <com.mikepenz.iconics.view.IconicsImageView
-                android:id="@+id/icon_password"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_above="@+id/button_entrar"
-                android:layout_alignParentLeft="false"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="false"
-                android:layout_below="@+id/editText_email"
-                android:padding="8dp"
-                android:scaleType="centerInside"
-
-                app:iiv_color="@color/primary_light"
-                app:iiv_icon="gmd-vpn-key"/>
-
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/editText_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/editText_email"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@+id/icon_password"
-                android:layout_toRightOf="@+id/icon_password"
-                android:hint="@string/HINT_PASSWORD"
-                android:inputType="textPassword"
-                android:singleLine="true"
-                android:textSize="16sp"
-
-                app:met_baseColor="@color/primary_light"
-                app:met_helperTextColor="@color/primary_light"
-                app:met_primaryColor="@color/accent"
-                app:met_textColor="@color/accent"
-                app:met_textColorHint="@color/primary_light"
-                app:met_underlineColor="@color/primary_light"
-                app:met_typeface="fonts/RobotoCondensed-Regular.ttf"/>
-
-            <Button
-                android:id="@+id/button_entrar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/editText_password"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:singleLine="false"
-                android:text="@string/BUTTON_LOGIN_ENTRAR"
-                android:textColor="@color/icons" />
-        </RelativeLayout>
-
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:baselineAligned="false"
-            android:focusable="false"
-            android:gravity="top|center"
+            android:background="@color/bg_tranparent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="15dp"
-                android:gravity="center"
-                android:text="@string/TEXT_TAMBIEN"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/icons"
-                android:textSize="14sp"
-                />
-
-            <Button
-                style="@style/MyFacebookLoginButton"
-                android:layout_width="wrap_content"
-                android:text="@string/com_facebook_loginview_log_in_button_long"
-                android:id="@+id/login_button"/>
-
-            <TextView
-                android:id="@+id/textView_nueva_cuenta"
+        <ImageView
+                android:id="@+id/logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:text="@string/TEXT_NUEVA_CUENTA"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/primary_light"
-                android:textIsSelectable="false"
-                android:textSize="14sp"
-                android:textStyle="bold|italic"/>
+                android:background="@drawable/logo"
+                android:contentDescription="@string/app_name"/>
 
-            <TextView
-                android:id="@+id/textView_olvida_password"
-                android:layout_width="wrap_content"
+        <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="40dp"
+                android:focusableInTouchMode="true"
                 android:gravity="center"
-                android:text="@string/TEXT_OLVIDE_PASSWORD"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/primary_light"
-                android:textIsSelectable="false"
-                android:textSize="14sp"
-                android:textStyle="bold|italic"/>
+                android:orientation="vertical"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp">
+
+            <com.mikepenz.iconics.view.IconicsImageView
+                    android:id="@+id/icon_email"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_above="@+id/icon_password"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:padding="8dp"
+                    android:scaleType="centerInside"
+                    app:iiv_color="@color/primary_light"
+                    app:iiv_icon="gmd-person"/>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/editText_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/icon_email"
+                    android:layout_toRightOf="@+id/icon_email"
+                    android:hint="@string/HINT_EMAIL"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true"
+                    android:textSize="14sp"
+                    app:met_baseColor="@color/primary_light"
+                    app:met_helperTextColor="@color/primary_light"
+                    app:met_primaryColor="@color/accent"
+                    app:met_textColor="@color/accent"
+                    app:met_textColorHint="@color/primary_light"
+                    app:met_typeface="fonts/Montserrat-UltraLight.otf"
+                    app:met_underlineColor="@color/primary_light"/>
+
+            <com.mikepenz.iconics.view.IconicsImageView
+                    android:id="@+id/icon_password"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_above="@+id/button_entrar"
+                    android:layout_alignParentLeft="false"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="false"
+                    android:layout_below="@+id/editText_email"
+                    android:padding="8dp"
+                    android:scaleType="centerInside"
+                    app:iiv_color="@color/primary_light"
+                    app:iiv_icon="gmd-vpn-key"/>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/editText_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editText_email"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/icon_password"
+                    android:layout_toRightOf="@+id/icon_password"
+                    android:hint="@string/HINT_PASSWORD"
+                    android:inputType="textPassword"
+                    android:singleLine="true"
+                    android:textSize="14sp"
+                    app:met_baseColor="@color/primary_light"
+                    app:met_helperTextColor="@color/primary_light"
+                    app:met_primaryColor="@color/accent"
+                    app:met_textColor="@color/accent"
+                    app:met_textColorHint="@color/primary_light"
+                    app:met_typeface="fonts/Montserrat-UltraLight.otf"
+                    app:met_underlineColor="@color/primary_light"/>
+
+            <Button
+                    android:id="@+id/button_entrar"
+                    fontPath="fonts/Montserrat-SemiBold.otf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editText_password"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:enabled="false"
+                    android:singleLine="false"
+                    android:text="@string/BUTTON_LOGIN_ENTRAR"
+                    android:textColor="@color/icons"/>
+        </RelativeLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
+                android:focusable="false"
+                android:gravity="top|center"
+                android:orientation="vertical">
+
+            <TextView
+                    android:id="@+id/textView"
+                    fontPath="fonts/Montserrat-Light.otf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:text="@string/TEXT_TAMBIEN"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/icons"
+                    android:textSize="14sp"/>
+
+            <Button
+                    android:id="@+id/login_button"
+                    style="@style/MyFacebookLoginButton"
+                    android:layout_width="wrap_content"
+                    android:text="@string/com_facebook_loginview_log_in_button_long"/>
+
+            <TextView
+                    android:id="@+id/textView_nueva_cuenta"
+                    fontPath="fonts/Montserrat-SemiBold.otf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="@string/TEXT_NUEVA_CUENTA"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/primary_light"
+                    android:textIsSelectable="false"
+                    android:textSize="14sp"
+                    android:textStyle="bold|italic"/>
+
+            <TextView
+                    android:id="@+id/textView_olvida_password"
+                    fontPath="fonts/Montserrat-SemiBold.otf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="@string/TEXT_OLVIDE_PASSWORD"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/primary_light"
+                    android:textIsSelectable="false"
+                    android:textSize="14sp"
+                    android:textStyle="bold|italic"/>
         </LinearLayout>
 
     </LinearLayout>

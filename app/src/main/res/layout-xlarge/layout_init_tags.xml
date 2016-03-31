@@ -6,7 +6,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_tagsinit"
                 tools:context="com.app.luis.androidapp.activities.TagsInit"
-                tools:ignore="MissingPrefix" android:padding="40dp">
+                tools:ignore="MissingPrefix" android:padding="120dp">
 
     <TextView
             android:id="@+id/tvMensajeTagsInicio"
