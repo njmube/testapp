@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -33,11 +34,13 @@ import java.util.*;
 
 public class TagsInit extends AbstractActivity {
 
-    private final int incrementList = 15;
+
     @Bind(R.id.tags_item_picker)
     CollectionPicker mPicker;
     @Bind(R.id.tvMensajeTagsInicio)
     TextView mensajeTagInicio;
+
+    private final int incrementList = 15;
     private int contador = 1;
     private Usuario usuario;
     private List<Item> tags;
@@ -77,14 +80,10 @@ public class TagsInit extends AbstractActivity {
         HashMap<String, String> selecionados = new HashMap<>();
 
         try {
-
             JSONArray jsonArrayTags = new JSONArray();
-            Set<String> set = new HashSet<>();
             for (Map.Entry<String, Object> entry : mPickerSeleccionados.entrySet()) {
 
                 String value = ((Item) entry.getValue()).text;
-                set.add(value);
-
                 JSONObject jsonTags = new JSONObject();
                 jsonTags.put("id", entry.getKey());
                 jsonTags.put("tag", value);
@@ -96,22 +95,12 @@ public class TagsInit extends AbstractActivity {
 
             String json_tags = new JSONObject().put("data", jsonObject).toString();
 
-            SharedPreferences preferences = getApplicationContext()
-                    .getSharedPreferences(AppConstants.USER_TAGS_PREFERENCES, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(Usuario.UserTagAttribute.TAG_JSON, new Gson().toJson(set));
-            editor.commit();
+            Log.d("JSON_TAGS", json_tags);
 
             postTags(json_tags);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
-
-        startActivity(new Intent(TagsInit.this, Home.class));
-        finish();
-
     }
 
     private void getTagsServer() {
@@ -193,5 +182,71 @@ public class TagsInit extends AbstractActivity {
     private void postTags(String json_tags) {
         Map<String, String> params = new HashMap<>();
         params.put("tags", json_tags);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        progressDialog = ProgressDialog.show(TagsInit.this, "", "Guardando tus datos...", true);
+
+        Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray jsonArray = response.getJSONObject("data").getJSONArray("tags");
+
+                    Log.d("TAGS_REPSONSE", jsonArray.toString());
+
+                    SharedPreferences preferences = getApplicationContext()
+                            .getSharedPreferences(AppConstants.USER_TAGS_PREFERENCES, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString(Usuario.UserTagAttribute.TAG_JSON, jsonArray.toString());
+                    editor.commit();
+
+                    startActivity(new Intent(TagsInit.this, Home.class));
+                    finish();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try {
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
+                    ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
+                    Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                } finally {
+                    progressDialog.dismiss();
+                }
+            }
+        };
+
+        JsonObjectRequest postRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                Environment.getInstance(getApplicationContext()).getBASE_URL() + "usuarios/"+usuario.getId()+"/tags",
+                json_tags,
+                jsonObjectListener,
+                errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("Accept", Environment.ACCEPT_HEADER);
+                map.put("Content-Type", Environment.CONTENT_TYPE);
+                map.put("Authorization", "Bearer " + usuario.getToken());
+                return map;
+            }
+        };
+
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                15000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        Volley.newRequestQueue(TagsInit.this).add(postRequest);
     }
 }
