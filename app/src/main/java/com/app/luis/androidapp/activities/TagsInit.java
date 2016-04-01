@@ -73,26 +73,36 @@ public class TagsInit extends AbstractActivity {
 
     @OnClick(R.id.btnContinuar)
     public void continuar() {
-        HashMap<String, Object> seleccionados = mPicker.getCheckedItems();
-
-        Set<String> set = new HashSet<>();
-        for (Map.Entry<String, Object> entry : seleccionados.entrySet()) {
-            set.add(((Item) entry.getValue()).text);
-        }
-
-        SharedPreferences preferences = getApplicationContext()
-                .getSharedPreferences(AppConstants.USER_TAGS_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
+        HashMap<String, Object> mPickerSeleccionados = mPicker.getCheckedItems();
+        HashMap<String, String> selecionados = new HashMap<>();
 
         try {
+
+            JSONArray jsonArrayTags = new JSONArray();
+            Set<String> set = new HashSet<>();
+            for (Map.Entry<String, Object> entry : mPickerSeleccionados.entrySet()) {
+
+                String value = ((Item) entry.getValue()).text;
+                set.add(value);
+
+                JSONObject jsonTags = new JSONObject();
+                jsonTags.put("id", entry.getKey());
+                jsonTags.put("tag", value);
+                jsonArrayTags.put(jsonTags);
+            }
+
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("data", set);
+            jsonObject.put("tags", jsonArrayTags);
 
-            String json_tags = jsonObject.toString();
-            Log.d("JSON_TAGS", json_tags);
+            String json_tags = new JSONObject().put("data", jsonObject).toString();
 
-            editor.putString(Usuario.UserTagAttribute.TAG_JSON, json_tags);
+            SharedPreferences preferences = getApplicationContext()
+                    .getSharedPreferences(AppConstants.USER_TAGS_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(Usuario.UserTagAttribute.TAG_JSON, new Gson().toJson(set));
             editor.commit();
+
+            postTags(json_tags);
         } catch (JSONException e) {
             e.printStackTrace();
         }

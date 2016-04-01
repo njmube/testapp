@@ -278,7 +278,7 @@ public class Login extends AbstractActivity implements KenBurnsView.TransitionLi
 
                                             progressDialog.dismiss();
 
-                                            Intent i = new Intent(getApplicationContext(), Home.class);
+                                            Intent i = new Intent(getApplicationContext(), TagsInit.class);
                                             startActivity(i);
                                             finish();
 
