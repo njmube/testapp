@@ -143,13 +143,14 @@ public class Login extends AbstractActivity implements KenBurnsView.TransitionLi
         Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+
+                progressDialog.dismiss();
+
                 try {
                     Usuario usuario = new Gson().fromJson(response.getJSONObject("data").toString(), Usuario.class);
 
                     PerfilActivo.getInstance().setUsuario(usuario);
                     PerfilActivo.getInstance().updateInfo(getApplicationContext());
-
-                    progressDialog.dismiss();
 
                     Intent intentHome = new Intent(getApplicationContext(), TagsInit.class);
                     startActivity(intentHome);
@@ -158,7 +159,6 @@ public class Login extends AbstractActivity implements KenBurnsView.TransitionLi
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
-                    progressDialog.dismiss();
                 }
             }
         };
@@ -166,19 +166,24 @@ public class Login extends AbstractActivity implements KenBurnsView.TransitionLi
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                try {
-                    String responseBody = new String(error.networkResponse.data, "utf-8");
-                    ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
-                    ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
 
-                    progressDialog.dismiss();
+                progressDialog.dismiss();
 
-                    Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
-                } catch (UnsupportedEncodingException | NullPointerException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                    progressDialog.dismiss();
+                if (error instanceof NoConnectionError) {
+                    Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        String responseBody = new String(error.networkResponse.data, "utf-8");
+                        ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
+                        ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
+
+                        Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
+                    } catch (UnsupportedEncodingException | NullPointerException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
+
             }
         };
 
@@ -370,8 +375,9 @@ public class Login extends AbstractActivity implements KenBurnsView.TransitionLi
         new MaterialDialog.Builder(this)
                 .title(R.string.DIALOG_TITULO_RESTABLECE_PASSWORD)
                 .titleColorRes(R.color.primary)
+                .typeface("Montserrat-SemiBold.otf", "Montserrat-Light.otf")
                 .content("Escribe tu dirección de email para enviarte un mensaje de recuperación.")
-                .inputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
+                .inputType(InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS)
                 .positiveText(R.string.BUTTON_RESTABLECER)
                 .negativeText(R.string.BUTTON_CANCELAR)
                 .positiveColorRes(R.color.primary)

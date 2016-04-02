@@ -77,8 +77,6 @@ public class TagsInit extends AbstractActivity {
     @OnClick(R.id.btnContinuar)
     public void continuar() {
         HashMap<String, Object> mPickerSeleccionados = mPicker.getCheckedItems();
-        HashMap<String, String> selecionados = new HashMap<>();
-
         try {
             JSONArray jsonArrayTags = new JSONArray();
             for (Map.Entry<String, Object> entry : mPickerSeleccionados.entrySet()) {
@@ -94,9 +92,6 @@ public class TagsInit extends AbstractActivity {
             jsonObject.put("tags", jsonArrayTags);
 
             String json_tags = new JSONObject().put("data", jsonObject).toString();
-
-            Log.d("JSON_TAGS", json_tags);
-
             postTags(json_tags);
         } catch (JSONException e) {
             e.printStackTrace();
