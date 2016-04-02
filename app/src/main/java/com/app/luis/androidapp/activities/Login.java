@@ -89,7 +89,7 @@ public class Login extends AbstractActivity implements KenBurnsView.TransitionLi
         String token = preferences.getString(Usuario.UserAttributes.TOKEN, "");
 
         if (!TextUtils.isEmpty(token)) {
-            startActivity(new Intent(Login.this, Home.class));
+            startActivity(new Intent(Login.this, MVPActivity.class));
             finish();
         } else {
             FacebookSdk.sdkInitialize(getApplicationContext());
@@ -167,7 +167,7 @@ public class Login extends AbstractActivity implements KenBurnsView.TransitionLi
                     PerfilActivo.getInstance().setUsuario(usuario);
                     PerfilActivo.getInstance().updateInfo(getApplicationContext());
 
-                    Intent intentHome = new Intent(getApplicationContext(), TagsInit.class);
+                    Intent intentHome = new Intent(Login.this, TagsInit.class);
                     startActivity(intentHome);
                     finish();
 

@@ -27,42 +27,43 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
+    // ButterKnife
+    // Kenburnsview
+    // Material Edit Inputs
+    // Volley Networking
+    // Gson
+    // Iconos
+    // Facebook connect
+    // MaterialDialog
+    compile('com.github.afollestad.material-dialogs:core:0.8.5.4@aar') {
+        transitive = true
+    }
+    // Tabs
+    // Calligraphy
+    // MaterialDateTimePicker
+    // Foursquare collector
+    // MaterialViewPager
+    compile('com.github.florent37:materialviewpager:1.1.3@aar') {
+        transitive = true
+    }
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
-    // ButterKnife
     compile 'com.jakewharton:butterknife:7.0.1'
-    // Kenburnsview
     compile 'com.flaviofaria:kenburnsview:1.0.6'
-    // Material Edit Inputs
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
-    // Volley Networking
     compile 'com.mcxiaoke.volley:library:1.0.19'
-    // Gson
     compile 'com.google.code.gson:gson:2.6.1'
-    // Iconos
     compile 'com.mikepenz:iconics-core:1.7.6@aar'
     compile 'com.mikepenz:google-material-typeface:1.2.0.1@aar'
     compile 'com.mikepenz:fontawesome-typeface:4.4.0.1@aar'
     compile 'com.mikepenz:octicons-typeface:3.0.0.1@aar'
     compile 'com.mikepenz:meteocons-typeface:1.1.0.1@aar'
     compile 'com.mikepenz:community-material-typeface:1.2.64.1@aar'
-    // Facebook connect
     compile 'com.facebook.android:facebook-android-sdk:+'
-    // MaterialDialog
-    compile('com.github.afollestad.material-dialogs:core:0.8.5.4@aar') {
-        transitive = true
-    }
-    // Tabs
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
-    // Calligraphy
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
-    // MaterialDateTimePicker
     compile 'com.wdullaer:materialdatetimepicker:2.1.1'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
-    // Foursquare collector
     compile 'com.anton46:collection-picker:1.0.2'
-    // MaterialViewPager
-    compile ('com.github.florent37:materialviewpager:1.1.3@aar'){
-        transitive = true
-    }
+    compile 'com.android.support:support-v4:23.2.1'
 }

@@ -59,6 +59,8 @@
 
         <activity android:name=".activities.TagsInit">
         </activity>
+        <activity android:name=".activities.MVPActivity">
+        </activity>
     </application>
 
 </manifest>

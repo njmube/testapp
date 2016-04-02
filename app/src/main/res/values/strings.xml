@@ -32,5 +32,10 @@
     <string name="BTN_TAGS_INIT_MAS">Más tags</string>
 
     <string name="TEXT_NO_CONEXON_INTERNET">No hay conexión a Internet.</string>
-    <string name="TEXT_PROBLEMAS_INTERNET">Hay problemas con la conexión a Internet, aseguarte de estar conectado y vuelve a intentar.</string>
+    <string name="TEXT_PROBLEMAS_INTERNET">Hay problemas con la conexión a Internet, aseguarte de estar conectado y
+        vuelve a intentar.
+    </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

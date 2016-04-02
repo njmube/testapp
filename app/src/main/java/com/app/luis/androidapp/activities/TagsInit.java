@@ -209,7 +209,7 @@ public class TagsInit extends AbstractActivity {
                     editor.putString(Usuario.UserTagAttribute.TAG_JSON, jsonArray.toString());
                     editor.commit();
 
-                    startActivity(new Intent(TagsInit.this, Home.class));
+                    startActivity(new Intent(TagsInit.this, MVPActivity.class));
                     finish();
                 } catch (JSONException e) {
                     e.printStackTrace();
