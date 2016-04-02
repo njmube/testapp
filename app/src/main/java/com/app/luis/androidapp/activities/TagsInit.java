@@ -103,6 +103,9 @@ public class TagsInit extends AbstractActivity {
         Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+
+                progressDialog.dismiss();
+
                 try {
                     tags = new ArrayList<>();
 
@@ -116,11 +119,8 @@ public class TagsInit extends AbstractActivity {
                     mPicker.setItems(tags.subList(0, incrementList));
                     mPicker.drawItemView();
 
-                    progressDialog.dismiss();
-
                 } catch (JSONException | IllegalArgumentException e) {
                     e.printStackTrace();
-                    progressDialog.dismiss();
 
                     if (!(e instanceof IllegalArgumentException)) {
                         Toast.makeText(getApplicationContext(), "Error: \n" + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -132,17 +132,22 @@ public class TagsInit extends AbstractActivity {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+
+                progressDialog.dismiss();
+
+                if (error instanceof NoConnectionError) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.TEXT_PROBLEMAS_INTERNET), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 try {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
                     ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
                     Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
 
-                    progressDialog.dismiss();
-
                 } catch (UnsupportedEncodingException | NullPointerException | IllegalArgumentException e) {
                     e.printStackTrace();
-                    progressDialog.dismiss();
 
                     if (!(e instanceof IllegalArgumentException)) {
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -175,10 +180,21 @@ public class TagsInit extends AbstractActivity {
     }
 
     private void postTags(String json_tags) {
+
         Map<String, String> params = new HashMap<>();
         params.put("tags", json_tags);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        int orientacion = getResources().getConfiguration().orientation;
+
+        switch (orientacion) {
+            case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                break;
+            case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                break;
+        }
+
         progressDialog = ProgressDialog.show(TagsInit.this, "", "Guardando tus datos...", true);
 
         Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
@@ -186,8 +202,6 @@ public class TagsInit extends AbstractActivity {
             public void onResponse(JSONObject response) {
                 try {
                     JSONArray jsonArray = response.getJSONObject("data").getJSONArray("tags");
-
-                    Log.d("TAGS_REPSONSE", jsonArray.toString());
 
                     SharedPreferences preferences = getApplicationContext()
                             .getSharedPreferences(AppConstants.USER_TAGS_PREFERENCES, Context.MODE_PRIVATE);
@@ -207,6 +221,14 @@ public class TagsInit extends AbstractActivity {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+
+                progressDialog.dismiss();
+
+                if (error instanceof NoConnectionError) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.TEXT_PROBLEMAS_INTERNET), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 try {
                     String responseBody = new String(error.networkResponse.data, "utf-8");
                     ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
@@ -215,8 +237,6 @@ public class TagsInit extends AbstractActivity {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                } finally {
-                    progressDialog.dismiss();
                 }
             }
         };

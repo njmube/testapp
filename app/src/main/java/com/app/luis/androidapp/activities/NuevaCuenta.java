@@ -115,6 +115,14 @@ public class NuevaCuenta extends AbstractActivity {
                     Response.ErrorListener errorListener = new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+
+                            progressDialog.dismiss();
+
+                            if (error instanceof NoConnectionError) {
+                                Toast.makeText(getApplicationContext(), getString(R.string.TEXT_PROBLEMAS_INTERNET), Toast.LENGTH_LONG).show();
+                                return;
+                            }
+
                             try {
                                 String responseBody = new String(error.networkResponse.data, "utf-8");
                                 ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
@@ -123,8 +131,6 @@ public class NuevaCuenta extends AbstractActivity {
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();
                                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                            } finally {
-                                progressDialog.dismiss();
                             }
                         }
                     };
