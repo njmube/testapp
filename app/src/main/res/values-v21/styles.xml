@@ -32,7 +32,7 @@
     </style>
     <!-- ActionBar TextAppearance -->
     <style name="ActionBarTextAppearance" parent="android:TextAppearance.Material.Widget.ActionBar.Title">
-        <item name="fontPath">fonts/Montserrat-Light.otf</item>
+        <item name="fontPath">fonts/Montserrat-Regular.otf</item>
     </style>
 
 

@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -170,18 +172,19 @@ public class Login extends AbstractActivity implements KenBurnsView.TransitionLi
                 progressDialog.dismiss();
 
                 if (error instanceof NoConnectionError) {
-                    Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                } else {
-                    try {
-                        String responseBody = new String(error.networkResponse.data, "utf-8");
-                        ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
-                        ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
+                    Toast.makeText(getApplicationContext(), getString(R.string.TEXT_PROBLEMAS_INTERNET), Toast.LENGTH_LONG).show();
+                    return;
+                }
 
-                        Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
-                    } catch (UnsupportedEncodingException | NullPointerException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                try {
+                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                    ErrorResponse responseClass = new FactoryResponse().createHttpResponse(error.networkResponse.statusCode);
+                    ErrorResponse errorResponse = new Gson().fromJson(responseBody, responseClass.getClass());
+
+                    Toast.makeText(getApplicationContext(), errorResponse.getUserMessage(), Toast.LENGTH_LONG).show();
+                } catch (UnsupportedEncodingException | NullPointerException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
             }
