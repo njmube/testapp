@@ -162,6 +162,7 @@ public class Login extends AbstractActivity implements KenBurnsView.TransitionLi
                 progressDialog.dismiss();
 
                 try {
+                    Log.i("RESPUESTA LOGIN", response.toString());
                     Usuario usuario = new Gson().fromJson(response.getJSONObject("data").toString(), Usuario.class);
 
                     PerfilActivo.getInstance().setUsuario(usuario);
@@ -205,7 +206,10 @@ public class Login extends AbstractActivity implements KenBurnsView.TransitionLi
 
         JsonObjectRequest postRequest = new JsonObjectRequest(
                 Request.Method.POST,
-                Environment.getInstance(getApplicationContext()).getBASE_URL() + "auth",
+                /**
+                 * @TODO cambiar la url a "auth"
+                 */
+                Environment.getInstance(getApplicationContext()).getBASE_URL() + "4ynvah-EW?delay=500",
                 new JSONObject(params),
                 jsonObjectListener,
                 errorListener) {

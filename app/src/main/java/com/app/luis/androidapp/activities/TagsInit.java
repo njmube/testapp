@@ -98,6 +98,9 @@ public class TagsInit extends AbstractActivity {
         }
     }
 
+    /**
+     * Obtiene los tags registrados de los negocios
+     */
     private void getTagsServer() {
 
         Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
@@ -158,7 +161,10 @@ public class TagsInit extends AbstractActivity {
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
-                Environment.getInstance(getApplicationContext()).getBASE_URL() + "tags",
+                /**
+                 * @TODO cambiar la url a "tags" y quitar comentario a HEADER Authorization
+                 */
+                Environment.getInstance(getApplicationContext()).getBASE_URL() + "VJSwgkL9b?delay=1000",
                 jsonObjectListener,
                 errorListener) {
             @Override
@@ -166,7 +172,7 @@ public class TagsInit extends AbstractActivity {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("Accept", Environment.ACCEPT_HEADER);
                 map.put("Content-Type", Environment.CONTENT_TYPE);
-                map.put("Authorization", "Bearer " + usuario.getToken());
+                //map.put("Authorization", "Bearer " + usuario.getToken());
                 return map;
             }
         };
@@ -243,7 +249,10 @@ public class TagsInit extends AbstractActivity {
 
         JsonObjectRequest postRequest = new JsonObjectRequest(
                 Request.Method.POST,
-                Environment.getInstance(getApplicationContext()).getBASE_URL() + "usuarios/"+usuario.getId()+"/tags",
+                /**
+                 * @TODO Cambiar la url a "usuarios/"+usuario.getId()+"/tags" y descomentar header
+                 */
+                Environment.getInstance(getApplicationContext()).getBASE_URL() + "V1AMIyL9b",
                 json_tags,
                 jsonObjectListener,
                 errorListener) {
@@ -252,7 +261,7 @@ public class TagsInit extends AbstractActivity {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("Accept", Environment.ACCEPT_HEADER);
                 map.put("Content-Type", Environment.CONTENT_TYPE);
-                map.put("Authorization", "Bearer " + usuario.getToken());
+                //map.put("Authorization", "Bearer " + usuario.getToken());
                 return map;
             }
         };

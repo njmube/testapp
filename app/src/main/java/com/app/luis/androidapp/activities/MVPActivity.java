@@ -94,19 +94,19 @@ public class MVPActivity extends AppCompatActivity {
                     case 0:
                         return HeaderDesign.fromColorResAndUrl(
                                 R.color.blue,
-                                "https://s3.amazonaws.com/aws-androidapp/src/j8aDd7oXl3o6x40b/galeria/0OxLAmpDLKpbVJRQ.jpg");
+                                "https://scontent-atl3-1.xx.fbcdn.net/v/t1.0-9/13413642_973218942797297_959563660214120468_n.jpg?oh=d35cdb01d389038bd6af63d4316ebc43&oe=5851356E");
                     case 1:
                         return HeaderDesign.fromColorResAndUrl(
                                 R.color.green,
-                                "https://s3.amazonaws.com/aws-androidapp/src/j8aDd7oXl3o6x40b/galeria/x0jeEaoEw5pRv6Jd.jpg");
+                                "https://scontent-atl3-1.xx.fbcdn.net/v/t1.0-9/12049709_536427233193902_8295308922045940099_n.jpg?oh=38da29e48655bc091de8d8f3dfd7f0f7&oe=585A7FF5");
                     case 2:
                         return HeaderDesign.fromColorResAndUrl(
                                 R.color.cyan,
-                                "https://s3.amazonaws.com/aws-androidapp/src/vjwb6yrAeQrgOXEB/galeria/mdnQV1o3zzqzv2NA.jpg");
+                                "https://scontent-atl3-1.xx.fbcdn.net/v/t1.0-9/13307404_506780582779964_927891767074137979_n.jpg?oh=370020e0838156a33b97935fe9559847&oe=584B80A5");
                     case 3:
                         return HeaderDesign.fromColorResAndUrl(
                                 R.color.red,
-                                "https://s3.amazonaws.com/aws-androidapp/src/EWwM5go9eoJ0R8d3/galeria/KDEJzLpYL7rxe4yW.jpg");
+                                "https://scontent-atl3-1.xx.fbcdn.net/v/t1.0-9/14035003_1798695297041599_959340275875654905_n.jpg?oh=f8e6e293360b9d4682206fd51dc7d636&oe=5840623C");
                 }
 
                 //execute others actions if needed (ex : modify your header logo)
