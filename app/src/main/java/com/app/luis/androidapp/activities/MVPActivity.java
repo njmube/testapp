@@ -1,5 +1,6 @@
 package com.app.luis.androidapp.activities;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -8,12 +9,16 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ImageSpan;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import com.app.luis.androidapp.R;
 import com.app.luis.androidapp.fragments.RecyclerViewFragment;
-import com.app.luis.androidapp.utils.Utils;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 
@@ -21,6 +26,8 @@ public class MVPActivity extends AppCompatActivity {
 
     MaterialViewPager mViewPager;
     DrawerLayout drawerLayout;
+    Drawable myDrawable;
+    String title;
 
     private Toolbar toolbar;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -74,15 +81,32 @@ public class MVPActivity extends AppCompatActivity {
 
             @Override
             public CharSequence getPageTitle(int position) {
+
                 switch (position % 4) {
                     case 0:
-                        return "Novedades";
+                        myDrawable = getResources().getDrawable(R.drawable.ic_search_white_24dp);
+                        title = "Novedades";
+//                        return "Novedades";
                     case 1:
-                        return "Lugares";
+                        myDrawable = getResources().getDrawable(R.drawable.ic_search_white_24dp);
+                        title = "Lugares";
+                        //return "Lugares";
                     case 2:
-                        return "Precios";
+                        myDrawable = getResources().getDrawable(R.drawable.ic_search_white_24dp);
+                        title = "Precios";
+                        //return "Precios";
                     case 3:
-                        return "Eventos";
+                        myDrawable = getResources().getDrawable(R.drawable.ic_search_white_24dp);
+                        title = "Eventos";
+                        //return "Eventos";
+                }
+                SpannableStringBuilder sb = new SpannableStringBuilder("   " + title); // space added before text for convenience
+                try {
+                    myDrawable.setBounds(5, 5, myDrawable.getIntrinsicWidth(), myDrawable.getIntrinsicHeight());
+                    ImageSpan span = new ImageSpan(myDrawable, DynamicDrawableSpan.ALIGN_BASELINE);
+                    sb.setSpan(span, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } catch (Exception e) {
+                    // TODO: handle exception
                 }
                 return "";
             }
@@ -132,6 +156,13 @@ public class MVPActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_toolbar_home, menu);
+        return true;
+    }
+
+    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();
@@ -139,9 +170,17 @@ public class MVPActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return mDrawerToggle.onOptionsItemSelected(item) ||
-                super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+            case R.id.action_search:
+                return true;
+            case R.id.action_user:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+//        return mDrawerToggle.onOptionsItemSelected(item) ||
+//                super.onOptionsItemSelected(item);
     }
-
-
 }
